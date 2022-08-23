@@ -15,10 +15,10 @@ class AccountController(
     private val accountConverter: AccountConverter,
     private val accountService: AccountService
 ) {
-    @PostMapping("/register")
+    @PostMapping("/register") //회원가입 트랜잭션을 수행합니다.
     fun register(request: RegisterRequest): ResponseEntity<RegisterResponse>  =
-        accountConverter.toDto(request)
-            .let { accountService.register(it) }
-            .let { RegisterResponse(it.idx) }
+        accountConverter.toDto(request) //요청정보를 통해 Dto를 구성합니다.
+            .let { accountService.register(it) } //Dto를 통해 회원가입 로직을 수행하고, 가입된 계정정보를 반환합니다.
+            .let { RegisterResponse(it.idx) } //응답객체를 구성하여 반환합니다.
             .let { ResponseEntity.ok(it) }
 }
