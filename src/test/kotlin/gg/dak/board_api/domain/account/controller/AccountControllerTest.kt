@@ -24,7 +24,7 @@ class AccountControllerTest {
         target = AccountController(accountConverter, accountService)
     }
 
-    @Test @DisplayName("회원가입 성공테스트")
+    @Test @DisplayName("AccountController - 회원가입 성공테스트")
     fun testRegister_positive() {
         //given
         val request = mock<RegisterRequest>()
