@@ -91,8 +91,8 @@ class AccountServiceTest {
         whenever(loginProperties.accessTokenProperties).thenReturn(mock())
         whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
         whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
-        whenever(jwtTokenGenerator.generate(mapOf("id" to id), accessTokenExpireSecond)).thenReturn(accessToken)
-        whenever(uuidTokenGenerator.generate(refreshTokenExpireSecond)).thenReturn(refreshToken)
+        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to "login-access"), accessTokenExpireSecond)).thenReturn(accessToken)
+        whenever(uuidTokenGenerator.generate(mapOf("id" to id, "type" to "login-refresh"), refreshTokenExpireSecond)).thenReturn(refreshToken)
 
         //then
         val result = target.login(dto)
