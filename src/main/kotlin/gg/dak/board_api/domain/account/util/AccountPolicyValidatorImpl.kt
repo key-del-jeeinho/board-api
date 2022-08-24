@@ -12,6 +12,7 @@ class AccountPolicyValidatorImpl: AccountPolicyValidator {
         when(operation) {
             //수행할 작업이 "회원가입"일 경우, 이에대한 정책을 검증합니다.
             OperationType.REGISTER -> validateRegisterNickname(dto.nickname)
+            OperationType.LOGIN -> TODO()
         }
 
     //유저의 닉네임은 2~5자 사이여야합니다.

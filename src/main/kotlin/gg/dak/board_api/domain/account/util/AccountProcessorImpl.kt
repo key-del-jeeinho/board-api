@@ -12,6 +12,7 @@ class AccountProcessorImpl(
     override fun process(operation: OperationType, dto: AccountDto): AccountDto =
         when(operation) {
             OperationType.REGISTER -> processRegister(dto)
+            OperationType.LOGIN -> dto
         }
 
     private fun processRegister(dto: AccountDto): AccountDto =
