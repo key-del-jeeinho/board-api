@@ -4,6 +4,7 @@ import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.type.OperationType
+import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.*
 import org.springframework.stereotype.Service
@@ -27,7 +28,11 @@ class AccountServiceImpl(
 
     override fun login(dto: AccountDto): LoginTokenDto =
         accountPolicyValidator.validate(OperationType.LOGIN, dto) //로그인 정책을 검사합니다.
-            .let { jwtTokenGenerator.generate(mapOf("id" to dto.id, "type" to "login-access"), loginProperties.accessTokenProperties.expireSecond) } //accessToken을 발급합니다.
-            .let { it to uuidTokenGenerator.generate(mapOf("id" to dto.id, "type" to "login-refresh"), loginProperties.refreshTokenProperties.expireSecond) } //refreshToken을 발급합니다.
-            .let { LoginTokenDto(it.first, it.second) }
+            .let { jwtTokenGenerator.generate( //accessToken을 발급합니다.
+                mapOf("id" to dto.id, "type" to TokenType.LOGIN_ACCESS.key),
+                loginProperties.accessTokenProperties.expireSecond) }
+            .let { it to uuidTokenGenerator.generate( //refreshToken을 발급합니다.
+                mapOf("id" to dto.id, "type" to TokenType.LOGIN_REFRESH.key),
+                loginProperties.refreshTokenProperties.expireSecond)
+            }.let { LoginTokenDto(it.first, it.second) }
 }

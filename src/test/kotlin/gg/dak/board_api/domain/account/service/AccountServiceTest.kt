@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.type.OperationType
+import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -91,8 +92,8 @@ class AccountServiceTest {
         whenever(loginProperties.accessTokenProperties).thenReturn(mock())
         whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
         whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
-        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to "login-access"), accessTokenExpireSecond)).thenReturn(accessToken)
-        whenever(uuidTokenGenerator.generate(mapOf("id" to id, "type" to "login-refresh"), refreshTokenExpireSecond)).thenReturn(refreshToken)
+        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
+        whenever(uuidTokenGenerator.generate(mapOf("id" to id, "type" to TokenType.LOGIN_REFRESH.key), refreshTokenExpireSecond)).thenReturn(refreshToken)
 
         //then
         val result = target.login(dto)
