@@ -48,7 +48,7 @@ class AccountServiceTest {
         whenever(accountRepository.save(entity)).thenReturn(savedEntity)
         whenever(accountConverter.toDto(savedEntity)).thenReturn(registeredDto)
 
-        //test
+        //then
         val result = target.register(dto)
 
         assertEquals(result, registeredDto)
