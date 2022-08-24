@@ -1,7 +1,10 @@
 package gg.dak.board_api.domain.account.controller
 
+import gg.dak.board_api.domain.account.data.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
+import gg.dak.board_api.domain.account.data.response.LoginResponse
 import gg.dak.board_api.domain.account.service.AccountService
 import gg.dak.board_api.domain.account.util.AccountConverter
 import org.junit.jupiter.api.Assertions.*
@@ -43,5 +46,32 @@ class AccountControllerTest {
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body!!.accountId, idx)
+    }
+
+    /* AccountController - 로그인 성공테스트
+    AccountController.login(?: Request)
+    요청에서 인증정보를 추출해, 로그인 로직을 수행하고, 이에대한 결과를 반환한다.
+    인증정보는 id, password가 있으며, 이를 AccountDto형태로 치환하여 AccountService에게 로그인 로직을 위임한다.
+    이후, Service에서 반환된 결과를 Response로 변환하여 반환한다.
+    로그인 성공시 반환값에는 Service에서 반환한 accessToken과 refreshToken이 포함되어있어야한다.
+     */
+    @Test @DisplayName("AccountController - 로그인 성공테스트")
+    fun testLogin_positive() {
+        //given
+        val request = mock<LoginRequest>()
+        val dto = mock<AccountDto>()
+        val loginTokenDto = mock<LoginTokenDto>()
+        val response = mock<LoginResponse>()
+
+        //when
+        whenever(accountConverter.toDto(request)).thenReturn(dto)
+        whenever(accountService.login(dto)).thenReturn(loginTokenDto)
+        whenever(accountConverter.toResponse(loginTokenDto)).thenReturn(response)
+
+        //then
+        val result = target.login(request)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body!!, response)
     }
 }
