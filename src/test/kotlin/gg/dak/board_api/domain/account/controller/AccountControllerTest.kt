@@ -1,6 +1,6 @@
 package gg.dak.board_api.domain.account.controller
 
-import gg.dak.board_api.domain.account.data.LoginTokenDto
+import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
