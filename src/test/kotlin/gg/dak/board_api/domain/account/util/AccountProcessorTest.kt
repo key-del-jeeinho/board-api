@@ -45,10 +45,9 @@ class AccountProcessorTest {
             password = password,
             isPasswordEncoded = false
         )
-        val encodedPassword = mock<String>()
+        val encodedPassword = TestDummyDataUtil.encodedPassword()
 
         //when
-        whenever(dto.password).thenReturn(password)
         whenever(passwordEncoder.encode(password)).thenReturn(encodedPassword)
 
         //then
