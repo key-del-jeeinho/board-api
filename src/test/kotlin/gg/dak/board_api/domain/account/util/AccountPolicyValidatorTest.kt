@@ -19,7 +19,7 @@ class AccountPolicyValidatorTest {
     }
 
     @Test @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 성공테스트")
-    fun testValidateRegister_success() {
+    fun testRegisterPolicyValidate_success() {
         //given
         val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
         val dto = mock<AccountDto>()
