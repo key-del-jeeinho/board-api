@@ -28,6 +28,6 @@ class AccountServiceImpl(
     override fun login(dto: AccountDto): LoginTokenDto =
         accountPolicyValidator.validate(OperationType.LOGIN, dto) //로그인 정책을 검사합니다.
             .let { jwtTokenGenerator.generate(mapOf("id" to dto.id), loginProperties.accessTokenProperties.expireSecond) } //accessToken을 발급합니다.
-            .let { it to uuidTokenGenerator.generate(loginProperties.refreshTokenProperties.expireSecond) } //refreshToken을 발급합니다.
+            .let { it to uuidTokenGenerator.generate(mapOf("id" to dto.id), loginProperties.refreshTokenProperties.expireSecond) } //refreshToken을 발급합니다.
             .let { LoginTokenDto(it.first, it.second) }
 }
