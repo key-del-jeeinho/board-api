@@ -1,0 +1,11 @@
+spring:
+  redis:
+    host: ${REDIS_URL}
+    port: ${REDIS_PORT}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USERNAME}
+  profiles:
+    active: ${SPRING_PROFILE}
