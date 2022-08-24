@@ -36,6 +36,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     //mysql
     runtimeOnly("mysql:mysql-connector-java")
+    //jwt
+    implementation ("io.jsonwebtoken:jjwt:0.9.1")
     //swagger
     implementation ("io.springfox:springfox-swagger-ui:3.0.0")
     implementation ("io.springfox:springfox-swagger2:3.0.0")
