@@ -1,4 +1,4 @@
-package gg.dak.board_api.global.security
+package gg.dak.board_api.global.security.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
