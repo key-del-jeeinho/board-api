@@ -1,7 +1,8 @@
-package gg.dak.board_api.domain.account.util
+package gg.dak.board_api.domain.account.util.impl
 
 import gg.dak.board_api.domain.account.data.enitty.UuidToken
 import gg.dak.board_api.domain.account.repository.UuidTokenRepository
+import gg.dak.board_api.domain.account.util.UuidTokenGenerator
 import org.springframework.stereotype.Component
 import java.util.UUID
 

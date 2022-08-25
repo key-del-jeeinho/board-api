@@ -3,6 +3,7 @@ package gg.dak.board_api.domain.account.util
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.type.TokenType
+import gg.dak.board_api.domain.account.util.impl.LoginTokenGeneratorImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

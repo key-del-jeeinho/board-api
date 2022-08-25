@@ -1,6 +1,7 @@
-package gg.dak.board_api.domain.account.util
+package gg.dak.board_api.domain.account.util.impl
 
 import gg.dak.board_api.domain.account.config.JwtProperties
+import gg.dak.board_api.domain.account.util.JwtTokenGenerator
 import gg.dak.board_api.global.common.util.DateUtil
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts

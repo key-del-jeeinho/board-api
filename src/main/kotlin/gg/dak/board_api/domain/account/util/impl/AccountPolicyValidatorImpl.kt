@@ -1,8 +1,9 @@
-package gg.dak.board_api.domain.account.util
+package gg.dak.board_api.domain.account.util.impl
 
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.repository.AccountRepository
+import gg.dak.board_api.domain.account.util.AccountPolicyValidator
 import gg.dak.board_api.global.common.exception.PolicyValidationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component

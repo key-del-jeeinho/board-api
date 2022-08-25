@@ -1,4 +1,4 @@
-package gg.dak.board_api.domain.account.util
+package gg.dak.board_api.domain.account.util.impl
 
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
@@ -6,6 +6,7 @@ import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
 import gg.dak.board_api.domain.account.data.response.LoginResponse
+import gg.dak.board_api.domain.account.util.AccountConverter
 import org.springframework.stereotype.Component
 
 @Component

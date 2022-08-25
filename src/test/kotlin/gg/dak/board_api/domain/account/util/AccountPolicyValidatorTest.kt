@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.repository.AccountRepository
+import gg.dak.board_api.domain.account.util.impl.AccountPolicyValidatorImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
