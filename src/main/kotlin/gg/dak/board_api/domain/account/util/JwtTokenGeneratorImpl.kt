@@ -20,7 +20,7 @@ class JwtTokenGeneratorImpl(
                 .setIssuer(jwtProperties.issuer)
                 .setIssuedAt(Timestamp.valueOf(it))
                 .setExpiration(Timestamp.valueOf(it.plusSeconds(expireSecond)))
-                .setClaims(payload)
+                .addClaims(payload)
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.secretKey)
                 .compact()
         }
