@@ -1,3 +1,8 @@
 package gg.dak.board_api.global.account.exception
 
-class UnknownAccountException(message: String) : RuntimeException(message)
+import gg.dak.board_api.global.error.GlobalException
+
+class UnknownAccountException(private val errorDetails: String) : RuntimeException(errorDetails), GlobalException {
+    override fun getErrorMessage() = "존재하지 않는 계정입니다."
+    override fun getErrorDetails() = errorDetails
+}
