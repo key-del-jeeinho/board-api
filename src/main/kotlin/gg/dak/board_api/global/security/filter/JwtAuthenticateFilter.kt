@@ -26,10 +26,14 @@ class JwtAuthenticateFilter(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
-    ) = request.getHeader("Authorization")
-        //만약 header에 토큰이 존재하지 않을경우, 인증/인가로직을 스킵한다.
-        .also { header -> if(header.isEmpty() || !header.startsWith(TOKEN_PREFIX)) return filterChain.doFilter(request, response) }
-        .let { header -> getToken(header) } //
+    ) = request.hasHeader("Authorization")
+        .let { //만약 header에 토큰이 존재하지 않을경우, 인증/인가로직을 스킵한다.
+            if(it) request.getHeader("Authorization")
+            else return filterChain.doFilter(request, response)
+        }.let { header -> //만약 header에 있는 토큰의 format이 올바르지 않을경우, 인증/인가로직을 스킵한다.
+            if(header.startsWith(TOKEN_PREFIX)) header
+            else return filterChain.doFilter(request, response)
+        }.let { header -> getToken(header) }
         .let { token -> getId(token) }
         .let { id ->
             if(SecurityContextHolder.getContext().authentication == null) //Security Context 에 인증된 객체가 없을경우
@@ -63,4 +67,8 @@ class JwtAuthenticateFilter(
     private fun isNotRefreshToken(payload: Map<String, String>): Boolean = payload["type"] != TokenType.LOGIN_ACCESS.key
     //토큰이 만료되었는지 검사합니다.
     private fun isExpired(payload: Map<String, String>): Boolean = payload["expiration"].toBoolean()
+
+    private fun HttpServletRequest.hasHeader(s: String): Boolean = runCatching {
+        if(getHeader(s).isNullOrEmpty()) throw Exception()
+    }.isSuccess
 }
