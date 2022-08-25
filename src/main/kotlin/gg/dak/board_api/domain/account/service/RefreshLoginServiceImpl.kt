@@ -3,7 +3,7 @@ package gg.dak.board_api.domain.account.service
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
-import gg.dak.board_api.domain.account.util.UuidTokenGenerator
+import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import gg.dak.board_api.global.common.exception.PolicyValidationException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
