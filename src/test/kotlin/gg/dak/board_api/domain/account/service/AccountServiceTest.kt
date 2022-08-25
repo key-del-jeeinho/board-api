@@ -1,14 +1,16 @@
 package gg.dak.board_api.domain.account.service
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.OperationType
-import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.AccountRepository
-import gg.dak.board_api.domain.account.util.*
+import gg.dak.board_api.domain.account.util.AccountConverter
+import gg.dak.board_api.domain.account.util.AccountPolicyValidator
+import gg.dak.board_api.domain.account.util.AccountProcessor
+import gg.dak.board_api.domain.account.util.LoginTokenGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -18,7 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.context.ApplicationEventPublisher
-import kotlin.random.Random
 
 class AccountServiceTest {
 
@@ -26,9 +27,7 @@ class AccountServiceTest {
     private lateinit var accountProcessor: AccountProcessor
     private lateinit var accountConverter: AccountConverter
     private lateinit var accountRepository: AccountRepository
-    private lateinit var loginProperties: LoginProperties
-    private lateinit var jwtTokenGenerator: JwtTokenGenerator
-    private lateinit var uuidTokenGenerator: UuidTokenGenerator
+    private lateinit var loginTokenGenerator: LoginTokenGenerator
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: AccountService
 
@@ -38,11 +37,9 @@ class AccountServiceTest {
         accountProcessor = mock()
         accountConverter = mock()
         accountRepository = mock()
-        loginProperties = mock()
-        jwtTokenGenerator = mock()
-        uuidTokenGenerator = mock()
+        loginTokenGenerator = mock()
         applicationEventPublisher = mock()
-        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginProperties, jwtTokenGenerator, uuidTokenGenerator, applicationEventPublisher)
+        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginTokenGenerator, applicationEventPublisher)
     }
 
     @Test @DisplayName("AccountService - 회원가입 성공테스트")
@@ -87,30 +84,19 @@ class AccountServiceTest {
         val id = TestDummyDataUtil.id()
         val password = TestDummyDataUtil.password()
         val accessToken = TestDummyDataUtil.token()
-        val accessTokenExpireSecond = Random.nextLong()
         val refreshToken = TestDummyDataUtil.token()
-        val refreshTokenExpireSecond = Random.nextLong()
+        val loginTokenDto = LoginTokenDto(accessToken, refreshToken)
 
         //when
         whenever(dto.id).thenReturn(id)
         whenever(dto.password).thenReturn(password)
-        whenever(loginProperties.refreshTokenProperties).thenReturn(mock())
-        whenever(loginProperties.accessTokenProperties).thenReturn(mock())
-        whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
-        whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
-        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
-        whenever(uuidTokenGenerator.generate(mapOf(
-            "id" to id,
-            "type" to TokenType.LOGIN_REFRESH.key,
-            "expiration" to false.toString()
-        ), refreshTokenExpireSecond)).thenReturn(refreshToken)
+        whenever(loginTokenGenerator.generate(id)).thenReturn(loginTokenDto)
 
         //then
         val result = target.login(dto)
 
         verify(accountPolicyValidator, times(1)).validate(OperationType.LOGIN, dto)
         verify(applicationEventPublisher, times(1)).publishEvent(LoginTokenCreateEvent(id, accessToken, refreshToken))
-        assertEquals(result.accessToken, accessToken)
-        assertEquals(result.refreshToken, refreshToken)
+        assertEquals(result, loginTokenDto)
     }
 }
