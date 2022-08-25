@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.impl.LoginTokenGeneratorImpl
+import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

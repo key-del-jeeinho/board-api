@@ -4,7 +4,7 @@ import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
-import gg.dak.board_api.domain.account.util.UuidTokenGenerator
+import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

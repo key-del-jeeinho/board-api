@@ -1,4 +1,4 @@
-package gg.dak.board_api.domain.account.util
+package gg.dak.board_api.global.account.util
 
 interface UuidTokenGenerator {
     fun generate(payload: Map<String, String>, expireSecond: Long): String
