@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component
 import java.sql.Timestamp
+import java.util.stream.Collectors
 
 @Component
 class JwtTokenGeneratorImpl(
@@ -25,4 +26,14 @@ class JwtTokenGeneratorImpl(
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.secretKey)
                 .compact()
         }
+
+    override fun decode(token: String): Map<String, String> =
+        Jwts.parser()
+            .setSigningKey(jwtProperties.secretKey)
+            .parseClaimsJws(token)
+            .body.entries.stream()
+            .collect(Collectors.toMap(
+                { it.key },
+                { it.value.toString() }
+            ))
 }
