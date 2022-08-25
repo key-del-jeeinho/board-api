@@ -5,8 +5,10 @@ import gg.dak.board_api.domain.account.config.LoginProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @SpringBootApplication
+@EnableWebMvc
 @EnableConfigurationProperties(LoginProperties::class, JwtProperties::class)
 class BoardApiApplication
 
