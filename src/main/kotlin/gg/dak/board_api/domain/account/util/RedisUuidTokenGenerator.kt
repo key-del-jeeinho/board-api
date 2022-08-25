@@ -12,6 +12,6 @@ class RedisUuidTokenGenerator(
     override fun generate(payload: Map<String, String>, expireSecond: Long): String =
         UUID.randomUUID().toString()
             .let { UuidToken(it, payload, expireSecond) }
-            .also { uuidTokenRepository.save(it) } //TODO SpringEvent 기반으로 로직 분산 고려해보기
+            .also { uuidTokenRepository.save(it) }
             .token
 }
