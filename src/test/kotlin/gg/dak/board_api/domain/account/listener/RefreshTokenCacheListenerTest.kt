@@ -1,10 +1,9 @@
-package gg.dak.board_api.domain.account
+package gg.dak.board_api.domain.account.listener
 
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.enitty.RefreshToken
 import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
-import gg.dak.board_api.domain.account.listener.RefreshTokenCacheListener
 import gg.dak.board_api.domain.account.repository.RefreshTokenRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
