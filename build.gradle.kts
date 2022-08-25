@@ -46,6 +46,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     testImplementation ("org.mockito:mockito-inline:4.7.0")
+    //cache
+    implementation ("org.springframework.boot:spring-boot-starter-cache")
 }
 
 tasks.withType<KotlinCompile> {
