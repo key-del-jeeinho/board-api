@@ -2,6 +2,7 @@ package gg.dak.board_api.domain.account.util
 
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
+import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.impl.LoginTokenGeneratorImpl
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -9,13 +10,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.context.ApplicationEventPublisher
 import kotlin.random.Random
 
 class LoginTokenGeneratorTest {
     private lateinit var loginProperties: LoginProperties
     private lateinit var jwtTokenGenerator: JwtTokenGenerator
     private lateinit var uuidTokenGenerator: UuidTokenGenerator
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: LoginTokenGenerator
 
     @BeforeEach
@@ -23,7 +28,8 @@ class LoginTokenGeneratorTest {
         loginProperties = mock()
         jwtTokenGenerator = mock()
         uuidTokenGenerator = mock()
-        target = LoginTokenGeneratorImpl(loginProperties, jwtTokenGenerator, uuidTokenGenerator)
+        applicationEventPublisher = mock()
+        target = LoginTokenGeneratorImpl(loginProperties, jwtTokenGenerator, uuidTokenGenerator, applicationEventPublisher)
     }
 
     /* LoginTokenGenerator - 로그인 토큰 발급 성공테스트
@@ -59,5 +65,6 @@ class LoginTokenGeneratorTest {
 
         assertEquals(result.accessToken, accessToken)
         assertEquals(result.refreshToken, refreshToken)
+        verify(applicationEventPublisher, times(1)).publishEvent(LoginTokenCreateEvent(id, accessToken, refreshToken))
     }
 }

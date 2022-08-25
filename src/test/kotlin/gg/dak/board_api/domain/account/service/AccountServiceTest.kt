@@ -4,7 +4,6 @@ import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.enitty.Account
-import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.AccountConverter
@@ -39,7 +38,7 @@ class AccountServiceTest {
         accountRepository = mock()
         loginTokenGenerator = mock()
         applicationEventPublisher = mock()
-        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginTokenGenerator, applicationEventPublisher)
+        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginTokenGenerator)
     }
 
     @Test @DisplayName("AccountService - 회원가입 성공테스트")
@@ -96,7 +95,6 @@ class AccountServiceTest {
         val result = target.login(dto)
 
         verify(accountPolicyValidator, times(1)).validate(OperationType.LOGIN, dto)
-        verify(applicationEventPublisher, times(1)).publishEvent(LoginTokenCreateEvent(id, accessToken, refreshToken))
         assertEquals(result, loginTokenDto)
     }
 }
