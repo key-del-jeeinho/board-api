@@ -14,4 +14,8 @@ class RedisUuidTokenGenerator(
             .let { UuidToken(it, payload, expireSecond) }
             .also { uuidTokenRepository.save(it) }
             .token
+
+    override fun decode(token: String): Map<String, String> {
+        TODO("Not yet implemented")
+    }
 }
