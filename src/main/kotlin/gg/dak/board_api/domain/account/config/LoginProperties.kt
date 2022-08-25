@@ -4,11 +4,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
-@ConfigurationProperties("account.login")
+@ConfigurationProperties(prefix = "account.login")
 data class LoginProperties(
     val refreshTokenProperties: RefreshTokenProperties,
-    val accessTokenProperties: JwtTokenProperties
-)
-
-data class RefreshTokenProperties(val expireSecond: Long)
-data class JwtTokenProperties(val expireSecond: Long)
+    val accessTokenProperties: AccessTokenProperties
+) {
+    data class RefreshTokenProperties(val expireSecond: Long)
+    data class AccessTokenProperties(val expireSecond: Long)
+}
