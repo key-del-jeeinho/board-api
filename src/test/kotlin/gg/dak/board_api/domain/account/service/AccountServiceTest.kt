@@ -4,6 +4,7 @@ import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
+import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.AccountRepository
@@ -16,6 +17,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.context.ApplicationEventPublisher
 import kotlin.random.Random
 
 class AccountServiceTest {
@@ -27,6 +29,7 @@ class AccountServiceTest {
     private lateinit var loginProperties: LoginProperties
     private lateinit var jwtTokenGenerator: JwtTokenGenerator
     private lateinit var uuidTokenGenerator: UuidTokenGenerator
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: AccountService
 
     @BeforeEach
@@ -38,7 +41,8 @@ class AccountServiceTest {
         loginProperties = mock()
         jwtTokenGenerator = mock()
         uuidTokenGenerator = mock()
-        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginProperties, jwtTokenGenerator, uuidTokenGenerator)
+        applicationEventPublisher = mock()
+        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginProperties, jwtTokenGenerator, uuidTokenGenerator, applicationEventPublisher)
     }
 
     @Test @DisplayName("AccountService - 회원가입 성공테스트")
@@ -73,6 +77,8 @@ class AccountServiceTest {
     - refreshToken은 어떠한 값도 담지 않은 UUID의 형식이어야한다.
     - refreshToken은 캐시 저장소에 만료기한까지 존재해야한다. 이 기능은 토큰 생성시 사용되는 util layer로 위임한다.
     토큰의 실제 생성 로직은 util layer로 위임한다.
+
+    로그인 성공시, 로그인 토큰 생성 이벤트를 발행해야한다.
      */
     @Test @DisplayName("AccountService - 로그인 성공테스트")
     fun testLogin_positive() {
@@ -103,6 +109,7 @@ class AccountServiceTest {
         val result = target.login(dto)
 
         verify(accountPolicyValidator, times(1)).validate(OperationType.LOGIN, dto)
+        verify(applicationEventPublisher, times(1)).publishEvent(LoginTokenCreateEvent(id, accessToken, refreshToken))
         assertEquals(result.accessToken, accessToken)
         assertEquals(result.refreshToken, refreshToken)
     }

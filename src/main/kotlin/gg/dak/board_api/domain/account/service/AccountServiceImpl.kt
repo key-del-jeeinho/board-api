@@ -3,10 +3,12 @@ package gg.dak.board_api.domain.account.service
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.*
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +19,8 @@ class AccountServiceImpl(
     private val accountRepository: AccountRepository,
     private val loginProperties: LoginProperties,
     private val jwtTokenGenerator: JwtTokenGenerator,
-    private val uuidTokenGenerator: UuidTokenGenerator
+    private val uuidTokenGenerator: UuidTokenGenerator,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ): AccountService {
     override fun register(dto: AccountDto): AccountDto =
         accountPolicyValidator.validate(OperationType.REGISTER, dto) //회원가입 정책을 검사합니다.
@@ -38,4 +41,6 @@ class AccountServiceImpl(
                     "expiration" to false.toString()
                 ), loginProperties.refreshTokenProperties.expireSecond)
             }.let { LoginTokenDto(it.first, it.second) }
+            //비즈니스로직 수행 후 loginToken 생성 이벤트를 발행합니다.
+            .also { applicationEventPublisher.publishEvent(LoginTokenCreateEvent(dto.id, it.accessToken, it.refreshToken)) }
 }
