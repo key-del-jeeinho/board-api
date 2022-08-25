@@ -3,7 +3,9 @@ package gg.dak.board_api.domain.account.util
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
+import org.springframework.stereotype.Component
 
+@Component
 class LoginTokenGeneratorImpl(
     private val loginProperties: LoginProperties,
     private val jwtTokenGenerator: JwtTokenGenerator,
