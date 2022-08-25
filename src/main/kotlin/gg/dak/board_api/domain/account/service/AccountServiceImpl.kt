@@ -32,7 +32,10 @@ class AccountServiceImpl(
                 mapOf("id" to dto.id, "type" to TokenType.LOGIN_ACCESS.key),
                 loginProperties.accessTokenProperties.expireSecond) }
             .let { it to uuidTokenGenerator.generate( //refreshToken을 발급합니다.
-                mapOf("id" to dto.id, "type" to TokenType.LOGIN_REFRESH.key),
-                loginProperties.refreshTokenProperties.expireSecond)
+                mapOf(
+                    "id" to dto.id,
+                    "type" to TokenType.LOGIN_REFRESH.key,
+                    "expiration" to false.toString()
+                ), loginProperties.refreshTokenProperties.expireSecond)
             }.let { LoginTokenDto(it.first, it.second) }
 }

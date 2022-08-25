@@ -93,7 +93,11 @@ class AccountServiceTest {
         whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
         whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
         whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
-        whenever(uuidTokenGenerator.generate(mapOf("id" to id, "type" to TokenType.LOGIN_REFRESH.key), refreshTokenExpireSecond)).thenReturn(refreshToken)
+        whenever(uuidTokenGenerator.generate(mapOf(
+            "id" to id,
+            "type" to TokenType.LOGIN_REFRESH.key,
+            "expiration" to false.toString()
+        ), refreshTokenExpireSecond)).thenReturn(refreshToken)
 
         //then
         val result = target.login(dto)
