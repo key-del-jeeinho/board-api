@@ -3,7 +3,7 @@ package gg.dak.board_api.domain.account.service
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.OperationType
-import gg.dak.board_api.domain.account.repository.AccountRepository
+import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.domain.account.util.AccountPolicyValidator
 import gg.dak.board_api.domain.account.util.AccountProcessor
