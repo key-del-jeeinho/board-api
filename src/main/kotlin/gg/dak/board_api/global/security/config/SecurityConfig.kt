@@ -17,5 +17,6 @@ class SecurityConfig {
             .cors().disable()
             .authorizeRequests()
             .antMatchers("/api/v1/account/**").permitAll()
+            .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**").permitAll()
             .and().build()
 }
