@@ -36,6 +36,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     //mysql
     runtimeOnly("mysql:mysql-connector-java")
+    //jwt
+    implementation ("io.jsonwebtoken:jjwt:0.9.1")
     //swagger
     implementation ("io.springfox:springfox-swagger-ui:3.0.0")
     implementation ("io.springfox:springfox-swagger2:3.0.0")
@@ -44,6 +46,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     testImplementation ("org.mockito:mockito-inline:4.7.0")
+    //cache
+    implementation ("org.springframework.boot:spring-boot-starter-cache")
 }
 
 tasks.withType<KotlinCompile> {
