@@ -6,13 +6,15 @@ import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.JwtTokenGenerator
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
 import gg.dak.board_api.domain.account.util.UuidTokenGenerator
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 @Component
 class LoginTokenGeneratorImpl(
     private val loginProperties: LoginProperties,
     private val jwtTokenGenerator: JwtTokenGenerator,
-    private val uuidTokenGenerator: UuidTokenGenerator
+    @Qualifier("volatility") private val uuidTokenGenerator: UuidTokenGenerator
 ) : LoginTokenGenerator {
     override fun generate(id: String): LoginTokenDto =
         jwtTokenGenerator.generate( //accessToken을 발급합니다.

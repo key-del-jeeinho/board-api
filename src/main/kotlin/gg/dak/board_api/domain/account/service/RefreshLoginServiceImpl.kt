@@ -5,11 +5,12 @@ import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
 import gg.dak.board_api.domain.account.util.UuidTokenGenerator
 import gg.dak.board_api.global.common.exception.PolicyValidationException
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 @Component
 class RefreshLoginServiceImpl(
-    private val uuidTokenGenerator: UuidTokenGenerator,
+    @Qualifier("volatility") private val uuidTokenGenerator: UuidTokenGenerator,
     private val loginTokenGenerator: LoginTokenGenerator
 ): RefreshLoginService {
     override fun refreshLogin(refreshToken: String): LoginTokenDto =
