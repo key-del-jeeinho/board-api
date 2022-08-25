@@ -1,11 +1,14 @@
 package gg.dak.board_api.domain.account.controller
 
+import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.request.LoginRequest
+import gg.dak.board_api.domain.account.data.request.RefreshLoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
 import gg.dak.board_api.domain.account.data.response.LoginResponse
 import gg.dak.board_api.domain.account.service.AccountService
+import gg.dak.board_api.domain.account.service.RefreshLoginService
 import gg.dak.board_api.domain.account.util.AccountConverter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -18,13 +21,15 @@ import kotlin.random.Random
 class AccountControllerTest {
     private lateinit var accountConverter: AccountConverter
     private lateinit var accountService: AccountService
+    private lateinit var refreshLoginService: RefreshLoginService
     private lateinit var target: AccountController
 
     @BeforeEach
     fun setUp() {
         accountConverter = mock()
         accountService = mock()
-        target = AccountController(accountConverter, accountService)
+        refreshLoginService = mock()
+        target = AccountController(accountConverter, accountService, refreshLoginService)
     }
 
     @Test @DisplayName("AccountController - 회원가입 성공테스트")
@@ -70,6 +75,33 @@ class AccountControllerTest {
 
         //then
         val result = target.login(request)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body!!, response)
+    }
+
+    /* AccountController - 로그인 연장 성공테스트
+    AccountController.refreshLogin(?: Request)
+    요청에서 재발급토큰을 추출해, 로그인 연장 로직을 수행하고 이에대한 결과를 반환한다.
+    RefreshLoginService 에게 로직을 위임한다.
+    이후, Service에서 반환된 결과를 Response로 변환하여 반환한다.
+    로그인 새로고침 성공시 반환값에는 Service에서 반환한 accessToken과 refreshToken이 포함되어있어야한다.
+     */
+    @Test @DisplayName("AccountController - 로그인 연장 성공테스트")
+    fun testRefreshLogin_positive() {
+        //given
+        val request = mock<RefreshLoginRequest>()
+        val refreshToken = TestDummyDataUtil.token()
+        val loginTokenDto = mock<LoginTokenDto>()
+        val response = mock<LoginResponse>()
+
+        //when
+        whenever(request.refreshToken).thenReturn(refreshToken)
+        whenever(refreshLoginService.refreshLogin(refreshToken)).thenReturn(loginTokenDto)
+        whenever(accountConverter.toResponse(loginTokenDto)).thenReturn(response)
+
+        //then
+        val result = target.refreshLogin(request)
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body!!, response)
