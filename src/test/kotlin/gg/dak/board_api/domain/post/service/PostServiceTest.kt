@@ -25,6 +25,10 @@ class PostServiceTest {
 
     @BeforeEach
     fun setUp() {
+        postConverter = mock()
+        postRepository = mock()
+        postValidator = mock()
+        postProcessor = mock()
         target = PostServiceImpl(postConverter, postRepository, postValidator, postProcessor)
     }
 
@@ -34,12 +38,14 @@ class PostServiceTest {
         val dto = mock<PostDto>()
         val processedDto = mock<PostDto>()
         val entity = mock<Post>()
+        val savedEntity = mock<Post>()
         val savedDto = mock<PostDto>()
 
         //when
         whenever(postProcessor.process(PostOperationType.CREATE, dto)).thenReturn(processedDto)
         whenever(postConverter.toEntity(processedDto)).thenReturn(entity)
-        whenever(postConverter.toDto(entity)).thenReturn(savedDto)
+        whenever(postRepository.save(entity)).thenReturn(savedEntity)
+        whenever(postConverter.toDto(savedEntity)).thenReturn(savedDto)
 
         //then
         val result = target.createPost(dto)
