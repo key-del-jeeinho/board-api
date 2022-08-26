@@ -15,4 +15,8 @@ class AccountQueryServiceImpl(
     override fun findAllAccount(pagination: PageRequest): Page<AccountDto> =
         accountRepository.findBy(pagination)
             .map { accountConverter.toDto(it) }
+
+    override fun findAccountByIndex(idx: Long): AccountDto {
+        TODO("Not yet implemented")
+    }
 }

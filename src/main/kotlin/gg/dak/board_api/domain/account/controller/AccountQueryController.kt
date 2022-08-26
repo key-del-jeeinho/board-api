@@ -31,9 +31,10 @@ class AccountQueryController(
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/{idx}")
-    fun findAccountByIndex(@PathVariable idx: String): ResponseEntity<AccountQueryResponse> {
-        TODO()
-    }
+    fun findAccountByIndex(@PathVariable idx: Long): ResponseEntity<AccountQueryResponse> =
+        accountQueryService.findAccountByIndex(idx)
+            .let { accountQueryConverter.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
 
     @GetMapping("/id/{id}")
     fun findAccountById(@PathVariable id: String): ResponseEntity<AccountQueryResponse> {

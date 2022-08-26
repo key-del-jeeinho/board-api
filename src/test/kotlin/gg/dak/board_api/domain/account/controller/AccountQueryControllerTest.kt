@@ -1,6 +1,7 @@
 package gg.dak.board_api.domain.account.controller
 
 import gg.dak.board_api.TestDummyDataUtil
+import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.response.AccountQueryResponse
 import gg.dak.board_api.domain.account.data.response.PageableAccountQueryResponse
 import gg.dak.board_api.domain.account.service.AccountQueryService
@@ -55,5 +56,28 @@ class AccountQueryControllerTest {
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body, pageableResponse)
+    }
+
+    /* AccountQueryController - 인덱스로 계정 조회 성공테스트
+    AccountQueryController.findAccountByIndex(?: Long)
+    요청에 있는 인덱스를 통해, 계정을 조회한다.
+    계정 조회로직은 AccountQueryService에게 위임한다.
+     */
+    @Test @DisplayName("AccountQueryController - 인덱스로 계정 조회 성공테스트")
+    fun testFindAccountByIndex_positive() {
+        //given
+        val idx = Random.nextLong()
+        val dto = mock<AccountDto>()
+        val response = mock<AccountQueryResponse>()
+
+        //when
+        whenever(accountQueryService.findAccountByIndex(idx)).thenReturn(dto)
+        whenever(accountQueryConverter.toResponse(dto)).thenReturn(response)
+
+        //then
+        val result = target.findAccountByIndex(idx)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body, response)
     }
 }
