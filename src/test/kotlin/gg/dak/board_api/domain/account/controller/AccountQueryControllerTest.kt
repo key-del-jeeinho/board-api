@@ -14,6 +14,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 class AccountQueryControllerTest {
@@ -36,10 +37,10 @@ class AccountQueryControllerTest {
     @Test @DisplayName("AccountQueryController - 전체 계정목록 조회 성공테스트")
     fun testFindAllAccountWithPagination_positive() {
         //given
-        val page = Random.nextInt()
+        val page = Random.nextInt().absoluteValue
         val size = (0..100).random()
         val pagination = PageRequest.of(page, size)
-        val accounts = (1..size).map { TestDummyDataUtil.account(isPasswordEncoded = true) }
+        val accounts = (1..size).map { TestDummyDataUtil.accountDto(isPasswordEncoded = true) }
         val data = PageImpl(accounts)
         val response = mock<AccountQueryResponse>()
         val pageableResponse = mock<PageableAccountQueryResponse>()
