@@ -5,7 +5,7 @@ import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 
 interface PostConverter {
-    fun toDto(request: CreatePostRequest): PostDto
+    fun toDto(request: CreatePostRequest, writerId: Long): PostDto
     fun toResponse(dto: PostDto): CreatePostResponse
 
 }
