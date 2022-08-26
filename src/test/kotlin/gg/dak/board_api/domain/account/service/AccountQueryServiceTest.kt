@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.account.service
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.global.account.repository.AccountRepository

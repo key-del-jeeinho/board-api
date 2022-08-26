@@ -1,4 +1,4 @@
-package gg.dak.board_api.domain.account.data.dto
+package gg.dak.board_api.global.account.data.dto
 
 data class AccountDto(
     val idx: Long,

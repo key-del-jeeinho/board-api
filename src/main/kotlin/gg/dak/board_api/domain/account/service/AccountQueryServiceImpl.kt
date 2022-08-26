@@ -1,6 +1,6 @@
 package gg.dak.board_api.domain.account.service
 
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.global.account.exception.UnknownAccountException
 import gg.dak.board_api.global.account.repository.AccountRepository

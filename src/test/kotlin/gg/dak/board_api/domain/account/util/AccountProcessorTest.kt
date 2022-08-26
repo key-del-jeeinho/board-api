@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.account.util
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.util.impl.AccountProcessorImpl
 import org.junit.jupiter.api.Assertions.assertEquals
