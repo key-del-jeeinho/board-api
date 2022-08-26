@@ -1,6 +1,6 @@
 package gg.dak.board_api
 
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import kotlin.random.Random
 
