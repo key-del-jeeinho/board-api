@@ -20,11 +20,14 @@ class AccountQueryServiceImpl(
     override fun findAccountByIndex(idx: Long): AccountDto =
         accountRepository.findById(idx)
             .let {
-                if(it.isEmpty) throw UnknownAccountException("존재하지 않는 계정의 인덱스입니다! - $idx")
+                if (it.isEmpty) throw UnknownAccountException("존재하지 않는 계정의 인덱스입니다! - $idx")
                 else it.get()
             }.let { accountConverter.toDto(it) }
 
-    override fun findAccountById(id: String): AccountDto {
-        TODO("Not yet implemented")
-    }
+    override fun findAccountById(id: String): AccountDto =
+        accountRepository.findById(id)
+            .let {
+                if (it.isEmpty) throw UnknownAccountException("존재하지 않는 계정의 ID입니다! - $id")
+                else it.get()
+            }.let { accountConverter.toDto(it) }
 }

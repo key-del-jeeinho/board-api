@@ -74,4 +74,25 @@ class AccountQueryServiceTest {
         val result = target.findAccountByIndex(idx)
         assertEquals(result, dto)
     }
+
+    /* AccountQueryService - ID로 계정조회 성공테스트
+    AccountQueryService.findAccountById(?: String)
+    인자로 받은 ID를 통해 계정을 조회한다.
+     */
+    @Test @DisplayName("AccountQueryService - ID로 계정 조회 성공테스트")
+    fun testFindAccountById_positive() {
+        //given
+        val id = TestDummyDataUtil.id()
+        val entity = mock<Account>()
+        val optional = Optional.of(entity)
+        val dto = mock<AccountDto>()
+
+        //when
+        whenever(accountRepository.findById(id)).thenReturn(optional)
+        whenever(accountConverter.toDto(entity)).thenReturn(dto)
+
+        //then
+        val result = target.findAccountById(id)
+        assertEquals(result, dto)
+    }
 }
