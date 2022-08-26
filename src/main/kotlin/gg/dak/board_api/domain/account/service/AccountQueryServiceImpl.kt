@@ -23,4 +23,8 @@ class AccountQueryServiceImpl(
                 if(it.isEmpty) throw UnknownAccountException("존재하지 않는 계정의 인덱스입니다! - $idx")
                 else it.get()
             }.let { accountConverter.toDto(it) }
+
+    override fun findAccountById(id: String): AccountDto {
+        TODO("Not yet implemented")
+    }
 }

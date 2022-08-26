@@ -80,4 +80,27 @@ class AccountQueryControllerTest {
         assertNotNull(result.body)
         assertEquals(result.body, response)
     }
+
+    /* AccountQueryController - ID로 계정조회 성공테스트
+    AccountQueryController.findAccountById(?: String)
+    요청에 있는 ID를 통해, 계정을 조회한다.
+    계정 조회로직은 AccountQueryService에게 위임한다.
+     */
+    @Test @DisplayName("AccountQueryController - ID로 계정조회 성공테스트")
+    fun testFindAccountById_positive() {
+        //given
+        val id = TestDummyDataUtil.id()
+        val dto = mock<AccountDto>()
+        val response = mock<AccountQueryResponse>()
+
+        //when
+        whenever(accountQueryService.findAccountById(id)).thenReturn(dto)
+        whenever(accountQueryConverter.toResponse(dto)).thenReturn(response)
+
+        //then
+        val result = target.findAccountById(id)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body, response)
+    }
 }

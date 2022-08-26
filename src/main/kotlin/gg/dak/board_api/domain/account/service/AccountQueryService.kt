@@ -7,4 +7,5 @@ import org.springframework.data.domain.PageRequest
 interface AccountQueryService {
     fun findAllAccount(pagination: PageRequest): Page<AccountDto>
     fun findAccountByIndex(idx: Long): AccountDto
+    fun findAccountById(id: String): AccountDto
 }
