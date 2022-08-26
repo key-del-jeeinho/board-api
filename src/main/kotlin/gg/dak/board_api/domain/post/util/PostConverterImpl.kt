@@ -13,12 +13,12 @@ class PostConverterImpl: PostConverter {
             idx = -1,
             title = request.title,
             content = request.content,
-            writerId = writerIdx
+            writerIdx = writerIdx
         )
 
     override fun toDto(entity: Post): PostDto = PostDto(
         idx = entity.idx,
-        writerId = entity.writerIdx,
+        writerIdx = entity.writerIdx,
         title = entity.title,
         content = entity.content
     )
@@ -27,7 +27,7 @@ class PostConverterImpl: PostConverter {
 
     override fun toEntity(dto: PostDto): Post = Post(
         idx = dto.idx,
-        writerIdx = dto.writerId,
+        writerIdx = dto.writerIdx,
         title = dto.title,
         content = dto.content
     )
