@@ -10,11 +10,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class PostProcessorTest {
-    private lateinit var postProcessor: PostProcessor
+    private lateinit var target: PostProcessor
 
     @BeforeEach
     fun setUp() {
-        postProcessor = PostProcessorImpl()
+        target = PostProcessorImpl()
     }
 
     @Test @DisplayName("PostProcessor - 포스트 생성 전처리 로직 성공테스트")
@@ -27,7 +27,7 @@ class PostProcessorTest {
         whenever(dto.copy(idx = 0)).thenReturn(processedDto)
 
         //then
-        val result = postProcessor.process(PostOperationType.CREATE, dto)
+        val result = target.process(PostOperationType.CREATE, dto)
         assertEquals(result, processedDto)
     }
 }
