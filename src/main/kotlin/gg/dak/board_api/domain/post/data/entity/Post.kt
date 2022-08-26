@@ -1,9 +1,7 @@
 package gg.dak.board_api.domain.post.data.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import gg.dak.board_api.domain.post.data.type.CategoryType
+import javax.persistence.*
 
 @Entity
 class Post(
@@ -11,5 +9,7 @@ class Post(
     val idx: Long,
     val writerIdx: Long,
     val title: String,
-    val content: String
+    val content: String,
+    @Enumerated(EnumType.STRING)
+    val category: CategoryType
 )
