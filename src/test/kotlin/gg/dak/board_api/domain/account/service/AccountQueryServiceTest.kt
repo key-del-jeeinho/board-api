@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.global.account.repository.AccountRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -14,6 +15,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
@@ -34,7 +36,7 @@ class AccountQueryServiceTest {
     인자로 받은 PageRequest를 통해 페이지네이션된 계정목록을 조회한다.
      */
     @Test @DisplayName("AccountQueryService - 전체 계정목록 조회 성공테스트")
-    fun testFindAllAccount() {
+    fun testFindAllAccount_positive() {
         //given
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
@@ -50,5 +52,26 @@ class AccountQueryServiceTest {
         //then
         val result = target.findAllAccount(pagination)
         assertTrue(result.content.stream().allMatch{ it == dto })
+    }
+
+    /* AccountQueryService - 인덱스로 계정 조회 성공테스트
+    AccountQueryService.findAccountByIndex(?: Long)
+    인자로 받은 인덱스를 통해 계정을 조회한다.
+     */
+    @Test @DisplayName("AccountQueryService - 인덱스로 계정 조회 성공테스트")
+    fun testFindAccountByIndex_positive() {
+        //given
+        val idx = Random.nextLong()
+        val entity = mock<Account>()
+        val optional = Optional.of(entity)
+        val dto = mock<AccountDto>()
+
+        //when
+        whenever(accountRepository.findById(idx)).thenReturn(optional)
+        whenever(accountConverter.toDto(entity)).thenReturn(dto)
+
+        //then
+        val result = target.findAccountByIndex(idx)
+        assertEquals(result, dto)
     }
 }
