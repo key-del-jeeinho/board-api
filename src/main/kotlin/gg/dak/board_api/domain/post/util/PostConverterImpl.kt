@@ -38,7 +38,12 @@ class PostConverterImpl: PostConverter {
         board = dto.board
     )
 
-    override fun toCreateEvent(dto: PostDto): PostCreateEvent {
-        TODO("Not yet implemented")
-    }
+    override fun toCreateEvent(dto: PostDto): PostCreateEvent = PostCreateEvent(
+        idx = dto.idx,
+        writerIdx = dto.writerIdx,
+        content = dto.content,
+        title = dto.title,
+        board = dto.board,
+        category = dto.category,
+    )
 }
