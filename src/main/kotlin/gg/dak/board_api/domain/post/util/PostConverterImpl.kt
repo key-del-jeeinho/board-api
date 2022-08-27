@@ -3,6 +3,7 @@ package gg.dak.board_api.domain.post.util
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.data.event.PostCreateEvent
+import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import gg.dak.board_api.domain.post.data.response.DeletePostResponse
@@ -59,4 +60,8 @@ class PostConverterImpl: PostConverter {
         board = dto.board,
         category = dto.category,
     )
+
+    override fun toDeleteEvent(idx: Long): PostDeleteEvent {
+        TODO("Not yet implemented")
+    }
 }
