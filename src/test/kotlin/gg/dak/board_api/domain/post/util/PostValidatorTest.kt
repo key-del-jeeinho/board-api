@@ -3,6 +3,7 @@ package gg.dak.board_api.domain.post.util
 import gg.dak.board_api.domain.post.config.PostProperties
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.DailyPostCount
+import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.data.type.PostOperationType
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
 import org.junit.jupiter.api.BeforeEach
@@ -33,6 +34,7 @@ class PostValidatorTest {
     @Test @DisplayName("PolicyValidator - 게시글 생성 로직 검증 성공테스트A")
     fun testValidateCreatePost_positive() {
         //given
+        val board = BoardType.values().random()
         val dailyPostLimit = (1..1000).random()
         val count = (1..999).filter { dailyPostLimit > it }.random()
         val accountIdx = Random.nextLong()
@@ -42,8 +44,9 @@ class PostValidatorTest {
 
         //when
         whenever(postProperties.dailyPostLimit).thenReturn(dailyPostLimit)
-        whenever(dailyPostCountRepository.findById(accountIdx)).thenReturn(optional)
+        whenever(dailyPostCountRepository.findByAccountIdxAndBoard(accountIdx, board)).thenReturn(optional)
         whenever(countEntity.count).thenReturn(count)
+        whenever(countEntity.board).thenReturn(board)
 
         //then
         assertDoesNotThrow { target.validate(PostOperationType.CREATE, dto) }

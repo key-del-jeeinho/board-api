@@ -2,6 +2,7 @@ package gg.dak.board_api.domain.post.listener
 
 import gg.dak.board_api.domain.post.data.entity.DailyPostCount
 import gg.dak.board_api.domain.post.data.event.PostCreateEvent
+import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -28,6 +29,7 @@ class DailyPostCountUpdateListenerTest {
     fun testUpdateDailyPostCount_positiveA() { //만약 이미 일일 작성 횟수 정보가 존재할 경우
         //given
         val accountIdx = Random.nextLong()
+        val board = BoardType.values().random()
         val count = Random.nextInt().absoluteValue
         val event = mock<PostCreateEvent>()
         val entity = mock<DailyPostCount>()
@@ -37,8 +39,9 @@ class DailyPostCountUpdateListenerTest {
 
         //when
         whenever(event.writerIdx).thenReturn(accountIdx)
-        whenever(dailyPostCountRepository.existsById(accountIdx)).thenReturn(true)
-        whenever(dailyPostCountRepository.findById(accountIdx)).thenReturn(optional)
+        whenever(event.board).thenReturn(board)
+        whenever(dailyPostCountRepository.existsByAccountIdxAndBoard(accountIdx, board)).thenReturn(true)
+        whenever(dailyPostCountRepository.findByAccountIdxAndBoard(accountIdx, board)).thenReturn(optional)
         whenever(entity.count).thenReturn(count)
         whenever(entity.copy(count = count+1)).thenReturn(newEntity)
         whenever(dailyPostCountRepository.save(newEntity)).thenReturn(savedEntity)
@@ -52,12 +55,14 @@ class DailyPostCountUpdateListenerTest {
     fun testUpdateDailyPostCount_positiveB() { //만약 이미 일일 작성 횟수 정보가 존재할 경우
         //given
         val accountIdx = Random.nextLong()
+        val board = BoardType.values().random()
         val event = mock<PostCreateEvent>()
-        val entity = DailyPostCount(accountIdx, 1)
+        val entity = DailyPostCount(accountIdx, 1, board)
 
         //when
         whenever(event.writerIdx).thenReturn(accountIdx)
-        whenever(dailyPostCountRepository.existsById(accountIdx)).thenReturn(false)
+        whenever(event.board).thenReturn(board)
+        whenever(dailyPostCountRepository.existsByAccountIdxAndBoard(accountIdx, board)).thenReturn(false)
 
         //then
         target.handle(event)
