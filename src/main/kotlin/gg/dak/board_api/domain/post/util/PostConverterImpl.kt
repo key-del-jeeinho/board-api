@@ -75,7 +75,12 @@ class PostConverterImpl: PostConverter {
     )
 
     override fun toDeleteEvent(idx: Long): PostDeleteEvent = PostDeleteEvent(idx = idx)
-    override fun toUpdateEvent(dto: PostDto): PostUpdateEvent {
-        TODO("Not yet implemented")
-    }
+    override fun toUpdateEvent(dto: PostDto): PostUpdateEvent = PostUpdateEvent(
+        idx = dto.idx,
+        writerIdx = dto.writerIdx,
+        content = dto.content,
+        title = dto.title,
+        board = dto.board,
+        category = dto.category,
+    )
 }
