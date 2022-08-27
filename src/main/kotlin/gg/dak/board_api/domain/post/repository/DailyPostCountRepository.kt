@@ -6,4 +6,5 @@ import java.util.*
 
 interface DailyPostCountRepository: CrudRepository<DailyPostCount, Long> {
     fun findByAccountIdx(accountIdx: Long): Optional<DailyPostCount>
+    fun existsByAccountIdx(accountIdx: Long): Boolean
 }
