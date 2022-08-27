@@ -61,7 +61,5 @@ class PostConverterImpl: PostConverter {
         category = dto.category,
     )
 
-    override fun toDeleteEvent(idx: Long): PostDeleteEvent {
-        TODO("Not yet implemented")
-    }
+    override fun toDeleteEvent(idx: Long): PostDeleteEvent = PostDeleteEvent(idx = idx)
 }
