@@ -10,6 +10,6 @@ class SecureAccountConverterImpl: SecureAccountConverter {
     override fun toUserDetails(entity: Account): UserDetails = UserDetailsImpl(
         id = entity.id,
         encodedPassword = entity.encodedPassword,
-        roles = mutableListOf("USER")
+        roles = mutableListOf("USER") //TODO 나중에 계정권한 기능 추가여부 결정
     )
 }
