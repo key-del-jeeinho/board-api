@@ -30,4 +30,15 @@ class PostProcessorTest {
         val result = target.process(PostOperationType.CREATE, dto)
         assertEquals(result, processedDto)
     }
+
+    @Test @DisplayName("PostProcessor - 포스트 제거 전처리 로직 성공테스트")
+    fun testProcessDeletePost_positive() {
+        //given
+        val dto = mock<PostDto>()
+
+
+        //then
+        val result = target.process(PostOperationType.DELETE, dto)
+        assertEquals(result, dto)
+    }
 }

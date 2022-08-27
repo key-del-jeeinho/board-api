@@ -27,4 +27,13 @@ class PostServiceImpl(
                 postConverter.toCreateEvent(it)
                 .let { event -> applicationEventPublisher.publishEvent(event) }
             }
+
+    override fun deletePost(dto: PostDto): PostDto =
+        postValidator.validate(PostOperationType.DELETE, dto)
+            .let { postProcessor.process(PostOperationType.DELETE, dto) }
+            .also { postRepository.deleteById(dto.idx) }
+            .also {
+                postConverter.toDeleteEvent(it.idx)
+                .let { event -> applicationEventPublisher.publishEvent(event) }
+            }.let { dto }
 }
