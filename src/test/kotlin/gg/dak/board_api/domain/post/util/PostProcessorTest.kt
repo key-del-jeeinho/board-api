@@ -1,20 +1,29 @@
 package gg.dak.board_api.domain.post.util
 
+import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.type.PostOperationType
+import gg.dak.board_api.domain.post.repository.PostRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.*
 
 class PostProcessorTest {
+    private lateinit var postRepository: PostRepository
+    private lateinit var postConverter: PostConverter
     private lateinit var target: PostProcessor
 
     @BeforeEach
     fun setUp() {
-        target = PostProcessorImpl()
+        postRepository = mock()
+        postConverter = PostConverterImpl()
+        target = PostProcessorImpl(postRepository, postConverter)
     }
 
     @Test @DisplayName("PostProcessor - 포스트 생성 전처리 로직 성공테스트")
@@ -36,9 +45,29 @@ class PostProcessorTest {
         //given
         val dto = mock<PostDto>()
 
-
         //then
         val result = target.process(PostOperationType.DELETE, dto)
         assertEquals(result, dto)
+    }
+
+    @Test @DisplayName("PostProcessor - 포스트 수정 전처리 로직 성공테스트")
+    fun testProcessUpdatePost_positive() {
+        //given
+        val dto = mock<PostDto>()
+        val updateContent = TestDummyDataUtil.content()
+        val entity = TestDummyDataUtil.post()
+        val idx = entity.idx
+        val updatedDto = TestDummyDataUtil.updatePost(entity, updateContent).let { TestDummyDataUtil.toDto(it) }
+        val optional = Optional.of(entity)
+
+        //when
+        whenever(dto.idx).thenReturn(idx)
+        whenever(dto.content).thenReturn(updateContent)
+        whenever(postRepository.findById(dto.idx)).thenReturn(optional)
+
+        //then
+        val result = target.process(PostOperationType.UPDATE, dto)
+        verify(postRepository, times(1)).findById(dto.idx)
+        assertEquals(result, updatedDto)
     }
 }

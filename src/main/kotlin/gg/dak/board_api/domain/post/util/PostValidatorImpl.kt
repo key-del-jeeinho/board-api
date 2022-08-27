@@ -16,18 +16,18 @@ class PostValidatorImpl(
     private val dailyPostCountRepository: DailyPostCountRepository,
     private val loginAccountService: LoginAccountService
 ): PostValidator {
-    override fun validate(type: PostOperationType, dto: PostDto) {
+    override fun validate(type: PostOperationType, dto: PostDto) =
         when(type) {
             PostOperationType.CREATE -> validateDailyPostLimit(dto)
-            PostOperationType.DELETE -> validateIsOwner(dto)
+            PostOperationType.DELETE -> validateIsOwner(dto, "포스트 삭제 정책을 위반하였습니다!", "포스트 작성자만 포스트를 삭제할 수 있습니다!")
+            PostOperationType.UPDATE -> validateIsOwner(dto, "포스트 수정 정책을 위반하였습니다!", "포스트 작성자만 포스트를 수정할 수 있습니다!")
         }
-    }
 
-    private fun validateIsOwner(dto: PostDto) =
+    private fun validateIsOwner(dto: PostDto, errorMessage: String, errorDetail: String) =
         postRepository.findById(dto.idx)
-            .let { if(it.isEmpty) throw PolicyValidationException("포스트 삭제 정책을 위반하였습니다!", "존재하지 않는 게시글입니다.") else it.get() }
+            .let { if(it.isEmpty) throw PolicyValidationException(errorMessage, "존재하지 않는 게시글입니다.") else it.get() }
             .let { it.writerIdx == loginAccountService.getLoginAccount().idx}
-            .let { isOwner -> if(!isOwner) throw PolicyValidationException("포스트 삭제 정책을 위반하였습니다!", "포스트 작성자만 포스트를 삭제할 수 있습니다!") }
+            .let { isOwner -> if(!isOwner) throw PolicyValidationException(errorMessage, errorDetail) }
 
     private fun validateDailyPostLimit(dto: PostDto) =
         dailyPostCountRepository.findByAccountIdxAndBoard(dto.writerIdx, dto.board)
