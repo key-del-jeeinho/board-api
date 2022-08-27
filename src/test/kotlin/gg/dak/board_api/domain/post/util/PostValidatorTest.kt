@@ -40,7 +40,7 @@ class PostValidatorTest {
     작성자가 일일 작성 가능 횟수를 초과하였다면, 게시글을 작성할 수 없다.
      */
     @Test @DisplayName("PolicyValidator - 게시글 작성 로직 검증 성공테스트A")
-    fun testValidateCreatePost_positive() {
+    fun testValidateCreatePost_positiveA() {
         //given
         val board = BoardType.values().random()
         val dailyPostLimit = (1..1000).random()
@@ -59,7 +59,23 @@ class PostValidatorTest {
         //then
         assertDoesNotThrow { target.validate(PostOperationType.CREATE, dto) }
     }
-    //TODO 일일 작성 게시글 정보가 없을 경우(오늘 첫 작성일 경우) 성공테스트 작성
+
+    @Test @DisplayName("PolicyValidator - 게시글 작성 로직 검증 성공테스트B")
+    fun testValidateCreatePost_positiveB() {
+        //given
+        val board = BoardType.values().random()
+        val dailyPostLimit = (1..1000).random()
+        val accountIdx = Random.nextLong()
+        val dto = mock<PostDto>()
+        val optional = Optional.empty<DailyPostCount>()
+
+        //when
+        whenever(postProperties.dailyPostLimit).thenReturn(dailyPostLimit)
+        whenever(dailyPostCountRepository.findByAccountIdxAndBoard(accountIdx, board)).thenReturn(optional)
+
+        //then
+        assertDoesNotThrow { target.validate(PostOperationType.CREATE, dto) }
+    }
 
     /* PolicyValidator - 게시글 삭제 로직 검증 성공테스트
     PolicyValidator.validate(PostOperationType.DELETE, ?: PostDto)
