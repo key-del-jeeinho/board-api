@@ -2,6 +2,10 @@ package gg.dak.board_api
 
 import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
+import gg.dak.board_api.domain.post.data.dto.PostDto
+import gg.dak.board_api.domain.post.data.entity.Post
+import gg.dak.board_api.domain.post.data.type.BoardType
+import gg.dak.board_api.domain.post.data.type.CategoryType
 import kotlin.random.Random
 
 object TestDummyDataUtil {
@@ -22,4 +26,32 @@ object TestDummyDataUtil {
         nickName = nickname((2..5).random()),
         id = id(),
         encodedPassword = encodedPassword())
+
+    fun post() = Post(
+        idx = Random.nextLong(),
+        writerIdx = Random.nextLong(),
+        title = "제목",
+        content = content(),
+        category = CategoryType.values().random(),
+        board = BoardType.values().random()
+    )
+
+    fun content() = listOf("내용", "내용일지도", "내용일거야", "ㅈㄱㄴ").random()
+    fun updatePost(entity: Post, updateContent: String) = Post(
+        idx = entity.idx,
+        writerIdx = entity.writerIdx,
+        title = entity.title,
+        content = updateContent,
+        category = entity.category,
+        board = entity.board,
+    )
+
+    fun toDto(entity: Post) = PostDto(
+        idx = entity.idx,
+        writerIdx = entity.writerIdx,
+        title = entity.title,
+        content = entity.content,
+        category = entity.category,
+        board = entity.board,
+    )
 }
