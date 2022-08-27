@@ -5,8 +5,10 @@ import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
+import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import gg.dak.board_api.domain.post.data.response.DeletePostResponse
+import gg.dak.board_api.domain.post.data.response.UpdatePostResponse
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.data.type.CategoryType
 import org.springframework.stereotype.Component
@@ -21,6 +23,10 @@ class PostConverterImpl: PostConverter {
         category = CategoryType.UNKNOWN,
         board = BoardType.UNKNOWN
     )
+
+    override fun toDto(postIdx: Long, request: UpdatePostRequest): PostDto {
+        TODO("Not yet implemented")
+    }
 
     override fun toDto(request: CreatePostRequest, writerIdx: Long): PostDto = PostDto(
             idx = -1,
@@ -42,6 +48,9 @@ class PostConverterImpl: PostConverter {
 
     override fun toCreateResponse(dto: PostDto): CreatePostResponse = CreatePostResponse(idx = dto.idx)
     override fun toDeleteResponse(dto: PostDto): DeletePostResponse = DeletePostResponse(deletedPostIdx = dto.idx)
+    override fun toUpdateResponse(dto: PostDto): UpdatePostResponse {
+        TODO("Not yet implemented")
+    }
 
     override fun toEntity(dto: PostDto): Post = Post(
         idx = dto.idx,

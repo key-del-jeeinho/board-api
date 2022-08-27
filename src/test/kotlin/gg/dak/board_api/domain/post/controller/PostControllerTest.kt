@@ -2,8 +2,10 @@ package gg.dak.board_api.domain.post.controller
 
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
+import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import gg.dak.board_api.domain.post.data.response.DeletePostResponse
+import gg.dak.board_api.domain.post.data.response.UpdatePostResponse
 import gg.dak.board_api.domain.post.service.PostService
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.global.security.service.LoginAccountService
@@ -67,6 +69,27 @@ class PostControllerTest {
 
         //then
         val result = target.deletePost(idx)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body, response)
+    }
+
+    @Test @DisplayName("PostController - 포스트 수정 성공테스트")
+    fun testUpdatePost_positive() {
+        //given
+        val idx = Random.nextLong()
+        val request = mock<UpdatePostRequest>()
+        val dto = mock<PostDto>()
+        val updatedDto = mock<PostDto>()
+        val response = mock<UpdatePostResponse>()
+
+        //when
+        whenever(postConverter.toDto(idx, request)).thenReturn(dto)
+        whenever(postService.updatePost(dto)).thenReturn(updatedDto)
+        whenever(postConverter.toUpdateResponse(updatedDto)).thenReturn(response)
+
+        //then
+        val result = target.updatePost(idx, request)
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body, response)

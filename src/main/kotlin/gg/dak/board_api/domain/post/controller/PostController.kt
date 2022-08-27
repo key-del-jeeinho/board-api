@@ -1,8 +1,10 @@
 package gg.dak.board_api.domain.post.controller
 
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
+import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import gg.dak.board_api.domain.post.data.response.DeletePostResponse
+import gg.dak.board_api.domain.post.data.response.UpdatePostResponse
 import gg.dak.board_api.domain.post.service.PostService
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.global.security.service.LoginAccountService
@@ -36,9 +38,13 @@ class PostController(
             .let { postConverter.toDeleteResponse(it) }
             .let { ResponseEntity.ok(it) }
 
-    @ApiOperation(value = "게시글 수정", notes = "게시글의 제목/내용을 수정합니다. 게시글 작성자만 수정할 수 있습니다.")
+    @ApiOperation(value = "게시글 수정", notes = "게시글의 내용을 수정합니다. 게시글 작성자만 수정할 수 있습니다.")
     @PutMapping("/{idx}")
-    fun changePost(@PathVariable idx: String) {
-
-    }
+    fun updatePost(@PathVariable idx: Long,
+                   @RequestBody request: UpdatePostRequest
+    ): ResponseEntity<UpdatePostResponse> =
+        postConverter.toDto(idx, request)
+            .let { postService.updatePost(it) }
+            .let { postConverter.toUpdateResponse(it) }
+            .let { ResponseEntity.ok(it) }
 }
