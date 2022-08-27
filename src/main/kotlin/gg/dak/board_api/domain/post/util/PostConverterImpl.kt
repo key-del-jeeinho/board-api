@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class PostConverterImpl: PostConverter {
-    override fun toDto(request: CreatePostRequest, writerIdx: Long): PostDto =
-        PostDto(
+    override fun toDto(request: CreatePostRequest, writerIdx: Long): PostDto = PostDto(
             idx = -1,
             title = request.title,
             content = request.content,
             writerIdx = writerIdx,
-            category = request.category
+            category = request.category,
+            board = request.board
         )
 
     override fun toDto(entity: Post): PostDto = PostDto(
@@ -22,7 +22,8 @@ class PostConverterImpl: PostConverter {
         writerIdx = entity.writerIdx,
         title = entity.title,
         content = entity.content,
-        category = entity.category
+        category = entity.category,
+        board = entity.board
     )
 
     override fun toResponse(dto: PostDto): CreatePostResponse = CreatePostResponse(idx = dto.idx)
@@ -32,6 +33,7 @@ class PostConverterImpl: PostConverter {
         writerIdx = dto.writerIdx,
         title = dto.title,
         content = dto.content,
-        category = dto.category
+        category = dto.category,
+        board = dto.board
     )
 }
