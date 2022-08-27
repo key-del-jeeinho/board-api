@@ -4,6 +4,7 @@ import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
+import gg.dak.board_api.domain.post.data.event.PostUpdateEvent
 import gg.dak.board_api.domain.post.data.type.PostOperationType
 import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.util.PostConverter
@@ -79,6 +80,30 @@ class PostServiceTest {
         val result = target.deletePost(dto)
         assertEquals(result, dto)
         verify(postValidator, times(1)).validate(PostOperationType.DELETE, dto)
+        verify(applicationEventPublisher, times(1)).publishEvent(event)
+    }
+
+    @Test @DisplayName("PostService - 포스트 수정 성공테스트")
+    fun testUpdatePost_positive() {
+        //given
+        val dto = mock<PostDto>()
+        val entity = mock<Post>()
+        val savedEntity = mock<Post>()
+        val processedDto = mock<PostDto>()
+        val savedDto = mock<PostDto>()
+        val event = mock<PostUpdateEvent>()
+
+        //when
+        whenever(postProcessor.process(PostOperationType.UPDATE, dto)).thenReturn(processedDto) //전처리과정에서 수정된 포스트 정보를 반환한다.
+        whenever(postConverter.toEntity(processedDto)).thenReturn(entity)
+        whenever(postRepository.save(entity)).thenReturn(savedEntity)
+        whenever(postConverter.toDto(savedEntity)).thenReturn(savedDto)
+        whenever(postConverter.toUpdateEvent(savedDto)).thenReturn(event)
+
+        //then
+        val result = target.updatePost(dto)
+        assertEquals(result, savedDto)
+        verify(postValidator, times(1)).validate(PostOperationType.UPDATE, dto)
         verify(applicationEventPublisher, times(1)).publishEvent(event)
     }
 }

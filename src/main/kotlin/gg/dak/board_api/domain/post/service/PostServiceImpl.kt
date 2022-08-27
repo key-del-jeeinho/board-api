@@ -37,7 +37,14 @@ class PostServiceImpl(
                 .let { event -> applicationEventPublisher.publishEvent(event) }
             }.let { dto }
 
-    override fun updatePost(dto: PostDto): PostDto {
-        TODO("Not yet implemented")
-    }
+    override fun updatePost(dto: PostDto): PostDto =
+        postValidator.validate(PostOperationType.UPDATE, dto)
+            .let { postProcessor.process(PostOperationType.UPDATE, dto) }
+            .let { postConverter.toEntity(it) }
+            .let { postRepository.save(it) }
+            .let { postConverter.toDto(it) }
+            .also {
+                postConverter.toUpdateEvent(it)
+                .let { event -> applicationEventPublisher.publishEvent(event) }
+            }
 }

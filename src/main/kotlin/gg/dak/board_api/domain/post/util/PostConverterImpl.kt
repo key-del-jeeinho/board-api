@@ -4,6 +4,7 @@ import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
+import gg.dak.board_api.domain.post.data.event.PostUpdateEvent
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
@@ -74,4 +75,7 @@ class PostConverterImpl: PostConverter {
     )
 
     override fun toDeleteEvent(idx: Long): PostDeleteEvent = PostDeleteEvent(idx = idx)
+    override fun toUpdateEvent(dto: PostDto): PostUpdateEvent {
+        TODO("Not yet implemented")
+    }
 }
