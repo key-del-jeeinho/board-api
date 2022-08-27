@@ -6,13 +6,20 @@ import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import gg.dak.board_api.domain.post.data.response.DeletePostResponse
+import gg.dak.board_api.domain.post.data.type.BoardType
+import gg.dak.board_api.domain.post.data.type.CategoryType
 import org.springframework.stereotype.Component
 
 @Component
 class PostConverterImpl: PostConverter {
-    override fun toDto(idx: Long): PostDto {
-        TODO("Not yet implemented")
-    }
+    override fun toDto(idx: Long): PostDto = PostDto(
+        idx = idx,
+        title = "title",
+        content = "content",
+        writerIdx = -1,
+        category = CategoryType.UNKNOWN,
+        board = BoardType.UNKNOWN
+    )
 
     override fun toDto(request: CreatePostRequest, writerIdx: Long): PostDto = PostDto(
             idx = -1,
@@ -33,9 +40,7 @@ class PostConverterImpl: PostConverter {
     )
 
     override fun toCreateResponse(dto: PostDto): CreatePostResponse = CreatePostResponse(idx = dto.idx)
-    override fun toDeleteResponse(dto: PostDto): DeletePostResponse {
-        TODO("Not yet implemented")
-    }
+    override fun toDeleteResponse(dto: PostDto): DeletePostResponse = DeletePostResponse(deletedPostIdx = dto.idx)
 
     override fun toEntity(dto: PostDto): Post = Post(
         idx = dto.idx,
