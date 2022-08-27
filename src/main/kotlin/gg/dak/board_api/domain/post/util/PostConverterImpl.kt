@@ -2,6 +2,7 @@ package gg.dak.board_api.domain.post.util
 
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
+import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
 import org.springframework.stereotype.Component
@@ -36,4 +37,8 @@ class PostConverterImpl: PostConverter {
         category = dto.category,
         board = dto.board
     )
+
+    override fun toCreateEvent(dto: PostDto): PostCreateEvent {
+        TODO("Not yet implemented")
+    }
 }

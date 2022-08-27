@@ -2,6 +2,7 @@ package gg.dak.board_api.domain.post.service
 
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
+import gg.dak.board_api.domain.post.data.event.PostCreateEvent
 import gg.dak.board_api.domain.post.data.type.PostOperationType
 import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.util.PostConverter
@@ -15,12 +16,14 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.context.ApplicationEventPublisher
 
 class PostServiceTest {
     private lateinit var postConverter: PostConverter
     private lateinit var postRepository: PostRepository
     private lateinit var postValidator: PostValidator
     private lateinit var postProcessor: PostProcessor
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: PostService
 
     @BeforeEach
@@ -29,7 +32,8 @@ class PostServiceTest {
         postRepository = mock()
         postValidator = mock()
         postProcessor = mock()
-        target = PostServiceImpl(postConverter, postRepository, postValidator, postProcessor)
+        applicationEventPublisher = mock()
+        target = PostServiceImpl(postConverter, postRepository, postValidator, postProcessor, applicationEventPublisher)
     }
 
     @Test @DisplayName("PostService - 포스트 생성 성공테스트")
@@ -40,16 +44,19 @@ class PostServiceTest {
         val entity = mock<Post>()
         val savedEntity = mock<Post>()
         val savedDto = mock<PostDto>()
+        val event = mock<PostCreateEvent>()
 
         //when
         whenever(postProcessor.process(PostOperationType.CREATE, dto)).thenReturn(processedDto)
         whenever(postConverter.toEntity(processedDto)).thenReturn(entity)
         whenever(postRepository.save(entity)).thenReturn(savedEntity)
         whenever(postConverter.toDto(savedEntity)).thenReturn(savedDto)
+        whenever(postConverter.toCreateEvent(savedDto)).thenReturn(event)
 
         //then
         val result = target.createPost(dto)
         assertEquals(result, savedDto)
         verify(postValidator, times(1)).validate(PostOperationType.CREATE, dto)
+        verify(applicationEventPublisher, times(1)).publishEvent(event)
     }
 }
