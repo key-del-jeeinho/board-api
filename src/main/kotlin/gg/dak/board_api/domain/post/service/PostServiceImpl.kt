@@ -27,4 +27,8 @@ class PostServiceImpl(
                 postConverter.toCreateEvent(it)
                 .let { event -> applicationEventPublisher.publishEvent(event) }
             }
+
+    override fun deletePost(dto: PostDto): PostDto {
+        TODO("Not yet implemented")
+    }
 }

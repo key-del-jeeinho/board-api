@@ -3,6 +3,7 @@ package gg.dak.board_api.domain.post.controller
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
 import gg.dak.board_api.domain.post.data.response.CreatePostResponse
+import gg.dak.board_api.domain.post.data.response.DeletePostResponse
 import gg.dak.board_api.domain.post.service.PostService
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.global.security.service.LoginAccountService
@@ -42,10 +43,30 @@ class PostControllerTest {
         whenever(loginAccountService.getLoginAccount().idx).thenReturn(writerIdx)
         whenever(postConverter.toDto(request, writerIdx)).thenReturn(dto)
         whenever(postService.createPost(dto)).thenReturn(createdDto)
-        whenever(postConverter.toResponse(createdDto)).thenReturn(response)
+        whenever(postConverter.toCreateResponse(createdDto)).thenReturn(response)
 
         //then
         val result = target.createPost(request)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body, response)
+    }
+
+    @Test @DisplayName("PostController - 포스트 제거 성공테스트")
+    fun testDeletePost_positive() {
+        //given
+        val idx = Random.nextLong()
+        val dto = mock<PostDto>()
+        val deletedDto = mock<PostDto>()
+        val response = mock<DeletePostResponse>()
+
+        //when
+        whenever(postConverter.toDto(idx)).thenReturn(dto)
+        whenever(postService.deletePost(dto)).thenReturn(deletedDto)
+        whenever(postConverter.toDeleteResponse(deletedDto)).thenReturn(response)
+
+        //then
+        val result = target.deletePost(idx)
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body, response)
