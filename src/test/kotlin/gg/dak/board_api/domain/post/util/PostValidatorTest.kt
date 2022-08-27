@@ -99,5 +99,26 @@ class PostValidatorTest {
 
         //then
         assertDoesNotThrow { target.validate(PostOperationType.DELETE, dto) }
+    }/* PolicyValidator - 게시글 수정 로직 검증 성공테스트
+    PolicyValidator.validate(PostOperationType.UPDATE, ?: PostDto)
+    요청자가 작성자가 아니라면, 게시글을 수정할 수 없다.
+     */
+    @Test @DisplayName("PolicyValidator - 게시글 수정 로직 검증 성공테스트")
+    fun testValidateUpdatePost_positive() {
+        //given
+        val dto = mock<PostDto>()
+        val entity = mock<Post>()
+        val ownerIdx = Random.nextLong()
+        val optional = Optional.of(entity)
+        val accountDto = mock<AccountDto>()
+
+        //when
+        whenever(postRepository.findById(dto.idx)).thenReturn(optional)
+        whenever(entity.writerIdx).thenReturn(ownerIdx)
+        whenever(loginAccountService.getLoginAccount()).thenReturn(accountDto)
+        whenever(accountDto.idx).thenReturn(ownerIdx)
+
+        //then
+        assertDoesNotThrow { target.validate(PostOperationType.UPDATE, dto) }
     }
 }

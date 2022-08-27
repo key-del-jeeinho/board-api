@@ -16,12 +16,12 @@ class PostValidatorImpl(
     private val dailyPostCountRepository: DailyPostCountRepository,
     private val loginAccountService: LoginAccountService
 ): PostValidator {
-    override fun validate(type: PostOperationType, dto: PostDto) {
+    override fun validate(type: PostOperationType, dto: PostDto) =
         when(type) {
             PostOperationType.CREATE -> validateDailyPostLimit(dto)
             PostOperationType.DELETE -> validateIsOwner(dto)
+            PostOperationType.UPDATE -> validateIsOwner(dto)
         }
-    }
 
     private fun validateIsOwner(dto: PostDto) =
         postRepository.findById(dto.idx)
