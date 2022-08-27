@@ -5,7 +5,9 @@ import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.type.PostOperationType
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
 import gg.dak.board_api.global.common.exception.PolicyValidationException
+import org.springframework.stereotype.Component
 
+@Component
 class PostValidatorImpl(
     private val postProperties: PostProperties,
     private val dailyPostCountRepository: DailyPostCountRepository

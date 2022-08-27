@@ -6,7 +6,9 @@ import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.domain.post.util.PostProcessor
 import gg.dak.board_api.domain.post.util.PostValidator
+import org.springframework.stereotype.Service
 
+@Service
 class PostServiceImpl(
     private val postConverter: PostConverter,
     private val postRepository: PostRepository,
