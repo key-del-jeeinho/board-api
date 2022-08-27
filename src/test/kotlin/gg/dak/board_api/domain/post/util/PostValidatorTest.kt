@@ -42,7 +42,7 @@ class PostValidatorTest {
 
         //when
         whenever(postProperties.dailyPostLimit).thenReturn(dailyPostLimit)
-        whenever(dailyPostCountRepository.findByAccountIdx(accountIdx)).thenReturn(optional)
+        whenever(dailyPostCountRepository.findById(accountIdx)).thenReturn(optional)
         whenever(countEntity.count).thenReturn(count)
 
         //then

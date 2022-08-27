@@ -12,9 +12,9 @@ class DailyPostCountUpdateListener(
 ) {
     @EventListener(PostCreateEvent::class)
     fun handle(e: PostCreateEvent) {
-        dailyPostCountRepository.existsByAccountIdx(e.writerIdx)
+        dailyPostCountRepository.existsById(e.writerIdx)
             .let { isExists ->
-                if(isExists) dailyPostCountRepository.findByAccountIdx(e.writerIdx).get()
+                if(isExists) dailyPostCountRepository.findById(e.writerIdx).get()
                 else DailyPostCount(e.writerIdx, 0)
             }.let { it.copy(count = it.count+1) }
             .let { dailyPostCountRepository.save(it) }

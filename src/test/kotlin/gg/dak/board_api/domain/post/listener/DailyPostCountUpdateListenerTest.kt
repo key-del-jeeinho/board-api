@@ -37,8 +37,8 @@ class DailyPostCountUpdateListenerTest {
 
         //when
         whenever(event.writerIdx).thenReturn(accountIdx)
-        whenever(dailyPostCountRepository.existsByAccountIdx(accountIdx)).thenReturn(true)
-        whenever(dailyPostCountRepository.findByAccountIdx(accountIdx)).thenReturn(optional)
+        whenever(dailyPostCountRepository.existsById(accountIdx)).thenReturn(true)
+        whenever(dailyPostCountRepository.findById(accountIdx)).thenReturn(optional)
         whenever(entity.count).thenReturn(count)
         whenever(entity.copy(count = count+1)).thenReturn(newEntity)
         whenever(dailyPostCountRepository.save(newEntity)).thenReturn(savedEntity)
@@ -57,7 +57,7 @@ class DailyPostCountUpdateListenerTest {
 
         //when
         whenever(event.writerIdx).thenReturn(accountIdx)
-        whenever(dailyPostCountRepository.existsByAccountIdx(accountIdx)).thenReturn(false)
+        whenever(dailyPostCountRepository.existsById(accountIdx)).thenReturn(false)
 
         //then
         target.handle(event)
