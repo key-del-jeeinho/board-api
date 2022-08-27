@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.data.response.PageableAccountQueryRespons
 import gg.dak.board_api.domain.account.service.AccountQueryService
 import gg.dak.board_api.domain.account.util.AccountQueryConverter
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,6 +21,7 @@ class AccountQueryController(
     private val accountQueryService: AccountQueryService,
     private val accountQueryConverter: AccountQueryConverter
 ) {
+    @ApiOperation(value = "전체 계정목록 조회(with Pagination)", notes = "페이지네이션된 전체 계정목록을 조회합니다.")
     @GetMapping("/all")
     fun findAllAccountWithPagination(
         @RequestParam("page") page: Int,
@@ -30,12 +32,14 @@ class AccountQueryController(
             .let { accountQueryConverter.toPageabelResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
 
+    @ApiOperation(value = "인덱스로 계정 조회", notes = "계정의 인덱스로 계정정보를 조회합니다.")
     @GetMapping("/{idx}")
     fun findAccountByIndex(@PathVariable idx: Long): ResponseEntity<AccountQueryResponse> =
         accountQueryService.findAccountByIndex(idx)
             .let { accountQueryConverter.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
+    @ApiOperation(value = "아이디로 계정조회", notes = "계정의 아이디로 계정정보를 조회합니다..")
     @GetMapping("/id/{id}")
     fun findAccountById(@PathVariable id: String): ResponseEntity<AccountQueryResponse> =
          accountQueryService.findAccountById(id)
