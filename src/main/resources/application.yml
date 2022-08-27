@@ -18,3 +18,5 @@ account:
 jwt:
   secret-key: boardapiisgood
   issuer: raul
+post:
+  daily-post-limit: 3

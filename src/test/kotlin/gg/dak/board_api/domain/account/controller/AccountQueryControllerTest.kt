@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.account.controller
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.response.AccountQueryResponse
 import gg.dak.board_api.domain.account.data.response.PageableAccountQueryResponse
 import gg.dak.board_api.domain.account.service.AccountQueryService

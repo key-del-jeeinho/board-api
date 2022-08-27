@@ -1,6 +1,6 @@
 package gg.dak.board_api.domain.account.util.impl
 
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.AccountPolicyValidator

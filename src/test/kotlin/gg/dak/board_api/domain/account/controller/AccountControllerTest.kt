@@ -2,7 +2,7 @@ package gg.dak.board_api.domain.account.controller
 
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
-import gg.dak.board_api.domain.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RefreshLoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
