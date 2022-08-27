@@ -20,7 +20,7 @@ class SecurityConfig {
             .authorizeRequests()
             .antMatchers("/api/v1/account/**").permitAll()
             .antMatchers("/api/v1/post/**").hasRole("USER")
-            .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**").permitAll()
+            .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**").permitAll()
             .and()
             .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
