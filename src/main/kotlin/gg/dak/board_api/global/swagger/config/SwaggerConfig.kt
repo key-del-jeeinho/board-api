@@ -14,7 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket
 @Configuration
 class SwaggerConfig {
     @Bean
-    fun docket(): Docket = Docket(DocumentationType.SWAGGER_2)
+    fun docket(): Docket = Docket(DocumentationType.OAS_30)
         .select()
         .apis(RequestHandlerSelectors.basePackage("gg.dak.board_api"))
         .paths(PathSelectors.any())
@@ -26,11 +26,12 @@ class SwaggerConfig {
     fun securityContext(): SecurityContext =
         SecurityContext.builder()
             .securityReferences(defaultAuth())
+            .operationSelector { true }
             .build()
 
     private fun defaultAuth(): List<SecurityReference> =
         arrayOf(AuthorizationScope("global", "accessEverything"))
             .let { listOf(SecurityReference("Authorization", it)) }
 
-    private fun apiKey() = ApiKey("Bearer", "Authorization", "header")
+    private fun apiKey() = ApiKey("Authorization", "Authorization", "header")
 }
