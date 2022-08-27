@@ -1,0 +1,13 @@
+name: Restrict merge from develop to main
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-compare-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check compare branch
+        run: |
+          if [[ "$GITHUB_HEAD_REF" == 'develop' ]]; then exit 1; else exit 0; fi;
