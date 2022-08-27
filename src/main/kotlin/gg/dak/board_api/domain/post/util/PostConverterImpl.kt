@@ -24,9 +24,14 @@ class PostConverterImpl: PostConverter {
         board = BoardType.UNKNOWN
     )
 
-    override fun toDto(postIdx: Long, request: UpdatePostRequest): PostDto {
-        TODO("Not yet implemented")
-    }
+    override fun toDto(postIdx: Long, request: UpdatePostRequest): PostDto = PostDto(
+        idx = postIdx,
+        title = "title",
+        content = request.content,
+        writerIdx = -1,
+        category = CategoryType.UNKNOWN,
+        board = BoardType.UNKNOWN
+    )
 
     override fun toDto(request: CreatePostRequest, writerIdx: Long): PostDto = PostDto(
             idx = -1,
@@ -48,9 +53,7 @@ class PostConverterImpl: PostConverter {
 
     override fun toCreateResponse(dto: PostDto): CreatePostResponse = CreatePostResponse(idx = dto.idx)
     override fun toDeleteResponse(dto: PostDto): DeletePostResponse = DeletePostResponse(deletedPostIdx = dto.idx)
-    override fun toUpdateResponse(dto: PostDto): UpdatePostResponse {
-        TODO("Not yet implemented")
-    }
+    override fun toUpdateResponse(dto: PostDto): UpdatePostResponse = UpdatePostResponse(updatedPostIdx = dto.idx)
 
     override fun toEntity(dto: PostDto): Post = Post(
         idx = dto.idx,
