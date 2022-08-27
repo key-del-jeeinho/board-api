@@ -6,10 +6,12 @@ import gg.dak.board_api.domain.post.config.PostProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @SpringBootApplication
 @EnableWebMvc
+@EnableScheduling
 @EnableConfigurationProperties(LoginProperties::class, JwtProperties::class, PostProperties::class)
 class BoardApiApplication
 
