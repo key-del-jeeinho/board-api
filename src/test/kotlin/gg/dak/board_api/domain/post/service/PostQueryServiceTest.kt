@@ -51,6 +51,23 @@ class PostQueryServiceTest {
         assertTrue(result.content.stream().allMatch { it == dto })
     }
 
+    @Test @DisplayName("PostQueryService - 인덱스로 게시글 조회 성공테스트")
+    fun testFindPostByIndex_positive() {
+        //given
+        val idx = Random.nextLong()
+        val entity = mock<Post>()
+        val optional = Optional.of(entity)
+        val dto = mock<PostDto>()
+
+        //when
+        whenever(postRepository.findById(idx)).thenReturn(optional)
+        whenever(postConverter.toDto(entity)).thenReturn(dto)
+
+        //then
+        val result = target.findPostByIndex(idx)
+        assertEquals(result, dto)
+    }
+
     @Test @DisplayName("PostQueryService - 게시판별 게시글목록 조회 성공테스트")
     fun testFindAllPostByBoard_positive() {
         //given
@@ -71,20 +88,23 @@ class PostQueryServiceTest {
         assertTrue(result.content.stream().allMatch { it == dto })
     }
 
-    @Test @DisplayName("PostQueryService - 인덱스로 게시글 조회 성공테스트")
-    fun testFindPostByIndex_positive() {
+    @Test @DisplayName("PostQueryService - 작성자별 게시글목록 조회 성공테스트")
+    fun testFindAllPostByWriterIdx_positive() {
         //given
-        val idx = Random.nextLong()
-        val entity = mock<Post>()
-        val optional = Optional.of(entity)
+        val writerIdx = Random.nextLong()
+        val page = Random.nextInt().absoluteValue
+        val size = (1..100).random()
+        val pagination = PageRequest.of(page, size)
+        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val data = PageImpl(posts)
         val dto = mock<PostDto>()
 
         //when
-        whenever(postRepository.findById(idx)).thenReturn(optional)
-        whenever(postConverter.toDto(entity)).thenReturn(dto)
+        whenever(postRepository.findAllByWriterIdx(pagination, writerIdx)).thenReturn(data)
+        whenever(postConverter.toDto(any<Post>())).thenReturn(dto)
 
         //then
-        val result = target.findPostByIndex(idx)
-        assertEquals(result, dto)
+        val result = target.findAllPostByWriterIdx(pagination, writerIdx)
+        assertTrue(result.content.stream().allMatch { it == dto })
     }
 }

@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface PostRepository: JpaRepository<Post, Long> {
     fun findBy(pageable: Pageable): Page<Post>
     fun findAllByBoard(pageable: Pageable, board: BoardType): Page<Post>
+    fun findAllByWriterIdx(pageable: Pageable, writerIdx: Long): Page<Post>
 }
