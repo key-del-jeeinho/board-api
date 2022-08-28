@@ -1,8 +1,9 @@
 package gg.dak.board_api.domain.post.util
 
 import gg.dak.board_api.domain.post.data.dto.PostDto
-import gg.dak.board_api.domain.post.data.response.PageablePostQueryResponse
+import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
+import gg.dak.board_api.domain.post.data.response.PostSummeryQueryResponse
 import org.springframework.data.domain.PageImpl
 import org.springframework.stereotype.Component
 
@@ -17,5 +18,13 @@ class PostQueryConverterImpl: PostQueryConverter {
         board = dto.board,
     )
 
-    override fun toPageableResponse(list: List<PostQueryResponse>): PageablePostQueryResponse = PageablePostQueryResponse(PageImpl(list))
+    override fun toSummaryResponse(dto: PostDto): PostSummeryQueryResponse = PostSummeryQueryResponse(
+        idx = dto.idx,
+        writerIdx = dto.writerIdx,
+        title = dto.title,
+        category = dto.category,
+        board = dto.board,
+    )
+
+    override fun toPageableResponse(list: List<PostSummeryQueryResponse>): PageablePostSummeryQueryResponse = PageablePostSummeryQueryResponse(PageImpl(list))
 }

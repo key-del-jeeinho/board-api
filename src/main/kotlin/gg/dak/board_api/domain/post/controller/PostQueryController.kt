@@ -1,6 +1,6 @@
 package gg.dak.board_api.domain.post.controller
 
-import gg.dak.board_api.domain.post.data.response.PageablePostQueryResponse
+import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
@@ -22,9 +22,9 @@ class PostQueryController(
     @GetMapping("/all")
     fun findAllPostWithPagination(
         @RequestParam("page") page: Int,
-        @RequestParam("size") size: Int): ResponseEntity<PageablePostQueryResponse> =
+        @RequestParam("size") size: Int): ResponseEntity<PageablePostSummeryQueryResponse> =
         postQueryService.findAllPost(PageRequest.of(page, size))
-            .map { postQueryConverter.toResponse(it) }
+            .map { postQueryConverter.toSummaryResponse(it) }
             .let { postQueryConverter.toPageableResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
 
@@ -40,9 +40,9 @@ class PostQueryController(
     fun findAllPostByBoardWithPagination(
         @PathVariable board: BoardType,
         @RequestParam("page") page: Int,
-        @RequestParam("size") size: Int): ResponseEntity<PageablePostQueryResponse> =
+        @RequestParam("size") size: Int): ResponseEntity<PageablePostSummeryQueryResponse> =
         postQueryService.findAllPostByBoard(PageRequest.of(page, size), board)
-            .map { postQueryConverter.toResponse(it) }
+            .map { postQueryConverter.toSummaryResponse(it) }
             .let { postQueryConverter.toPageableResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
 
@@ -51,9 +51,9 @@ class PostQueryController(
     fun findAllPostByWriterIdxWithPagination(
         @PathVariable writerIdx: Long,
         @RequestParam("page") page: Int,
-        @RequestParam("size") size: Int): ResponseEntity<PageablePostQueryResponse> =
+        @RequestParam("size") size: Int): ResponseEntity<PageablePostSummeryQueryResponse> =
         postQueryService.findAllPostByWriterIdx(PageRequest.of(page, size), writerIdx)
-            .map { postQueryConverter.toResponse(it) }
+            .map { postQueryConverter.toSummaryResponse(it) }
             .let { postQueryConverter.toPageableResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
 }

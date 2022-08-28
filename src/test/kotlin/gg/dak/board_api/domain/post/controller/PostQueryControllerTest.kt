@@ -2,8 +2,9 @@ package gg.dak.board_api.domain.post.controller
 
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
-import gg.dak.board_api.domain.post.data.response.PageablePostQueryResponse
+import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
+import gg.dak.board_api.domain.post.data.response.PostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
 import gg.dak.board_api.domain.post.util.PostQueryConverter
@@ -39,12 +40,12 @@ class PostQueryControllerTest {
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
-        val response = mock<PostQueryResponse>()
-        val pageableResponse = mock<PageablePostQueryResponse>()
+        val response = mock<PostSummeryQueryResponse>()
+        val pageableResponse = mock<PageablePostSummeryQueryResponse>()
 
         //when
         whenever(postQueryService.findAllPost(pagination)).thenReturn(data)
-        whenever(postQueryConverter.toResponse(any())).thenReturn(response)
+        whenever(postQueryConverter.toSummaryResponse(any())).thenReturn(response)
         whenever(postQueryConverter.toPageableResponse(any())).thenReturn(pageableResponse)
 
         //then
@@ -81,12 +82,12 @@ class PostQueryControllerTest {
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
-        val response = mock<PostQueryResponse>()
-        val pageableResponse = mock<PageablePostQueryResponse>()
+        val response = mock<PostSummeryQueryResponse>()
+        val pageableResponse = mock<PageablePostSummeryQueryResponse>()
 
         //when
         whenever(postQueryService.findAllPostByBoard(pagination, board)).thenReturn(data)
-        whenever(postQueryConverter.toResponse(any())).thenReturn(response)
+        whenever(postQueryConverter.toSummaryResponse(any())).thenReturn(response)
         whenever(postQueryConverter.toPageableResponse(any())).thenReturn(pageableResponse)
 
         //then
@@ -105,12 +106,12 @@ class PostQueryControllerTest {
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
-        val response = mock<PostQueryResponse>()
-        val pageableResponse = mock<PageablePostQueryResponse>()
+        val response = mock<PostSummeryQueryResponse>()
+        val pageableResponse = mock<PageablePostSummeryQueryResponse>()
 
         //when
         whenever(postQueryService.findAllPostByWriterIdx(pagination, writerIdx)).thenReturn(data)
-        whenever(postQueryConverter.toResponse(any())).thenReturn(response)
+        whenever(postQueryConverter.toSummaryResponse(any())).thenReturn(response)
         whenever(postQueryConverter.toPageableResponse(any())).thenReturn(pageableResponse)
 
         //then
