@@ -52,7 +52,7 @@ class DailyPostCountUpdateListenerTest {
     }
 
     @Test @DisplayName("DailyPostCountUpdateListener - 일일 게시글 작성 횟수 추가 성공테스트B")
-    fun testUpdateDailyPostCount_positiveB() { //만약 이미 일일 작성 횟수 정보가 존재할 경우
+    fun testUpdateDailyPostCount_positiveB() { //만약 일일 작성 횟수 정보가 존재하지 않을 경우
         //given
         val accountIdx = Random.nextLong()
         val board = BoardType.values().random()
