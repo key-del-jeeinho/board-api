@@ -9,4 +9,5 @@ import java.util.*
 interface AccountRepository: JpaRepository<Account, Long> {
     fun findById(id: String): Optional<Account>
     fun findBy(pageable: Pageable): Page<Account>
+    fun existsById(id: String): Boolean
 }
