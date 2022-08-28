@@ -6,5 +6,5 @@ import org.springframework.data.redis.core.RedisHash
 @RedisHash("post-view-count")
 data class PostViewCount (
     @Id val postIdx: Long,
-    var count: Long
+    var ips: Set<String>
 )
