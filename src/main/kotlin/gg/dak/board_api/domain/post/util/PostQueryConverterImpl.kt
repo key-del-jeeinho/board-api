@@ -28,7 +28,13 @@ class PostQueryConverterImpl: PostQueryConverter {
     )
 
     override fun toPageableResponse(list: List<PostSummeryQueryResponse>): PageablePostSummeryQueryResponse = PageablePostSummeryQueryResponse(PageImpl(list))
-    override fun toEvent(dto: PostDto, ip: String): PostQueryEvent {
-        TODO("Not yet implemented")
-    }
+    override fun toEvent(dto: PostDto, ip: String): PostQueryEvent = PostQueryEvent(
+        idx = dto.idx,
+        writerIdx = dto.writerIdx,
+        title = dto.title,
+        content = dto.content,
+        category = dto.category,
+        board = dto.board,
+        ip = ip
+    )
 }
