@@ -4,6 +4,7 @@ import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.response.PageablePostQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
+import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
 import gg.dak.board_api.domain.post.util.PostQueryConverter
 import org.junit.jupiter.api.Assertions.*
@@ -69,5 +70,29 @@ class PostQueryControllerTest {
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body, response)
+    }
+
+    @Test @DisplayName("PostQueryController - 게시판별 게시글목록 조회 성공테스트")
+    fun testFindAllPostByBoardIdWithPagination() {
+        //given
+        val board = BoardType.values().random()
+        val page = Random.nextInt().absoluteValue
+        val size = (0..100).random()
+        val pagination = PageRequest.of(page, size)
+        val posts = (1..size).map { TestDummyDataUtil.postDto() }
+        val data = PageImpl(posts)
+        val response = mock<PostQueryResponse>()
+        val pageableResponse = mock<PageablePostQueryResponse>()
+
+        //when
+        whenever(postQueryService.findAllPostByBoard(pagination, board)).thenReturn(data)
+        whenever(postQueryConverter.toResponse(any())).thenReturn(response)
+        whenever(postQueryConverter.toPageableResponse(any())).thenReturn(pageableResponse)
+
+        //then
+        val result = target.findAllPostByBoardWithPagination(board = board, page = page, size = size)
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertNotNull(result.body)
+        assertEquals(result.body, pageableResponse)
     }
 }
