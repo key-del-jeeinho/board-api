@@ -2,6 +2,7 @@ package gg.dak.board_api.domain.post.listener
 
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.entity.PostViewCount
+import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
 import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.repository.PostViewCountRepository
 import org.junit.jupiter.api.BeforeEach
@@ -64,5 +65,19 @@ class PostViewCountUpdateListenerTest {
         //then
         target.handle(event)
         verify(postViewCountRepository, times(1)).save(entity)
+    }
+
+    @Test @DisplayName("PostViewCountUpdateListener - 게시글 조회수 정보 제거 성공테스트")
+    fun testDeletePostViewCount_positive() {
+        //given
+        val postIdx = Random.nextLong()
+        val event = mock<PostDeleteEvent>()
+
+        //when
+        whenever(event.idx).thenReturn(postIdx)
+
+        //then
+        target.handle(event)
+        verify(postViewCountRepository, times(1)).deleteById(postIdx)
     }
 }

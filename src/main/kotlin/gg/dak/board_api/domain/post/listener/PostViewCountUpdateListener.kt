@@ -1,6 +1,7 @@
 package gg.dak.board_api.domain.post.listener
 
 import gg.dak.board_api.domain.post.data.entity.PostViewCount
+import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
 import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.repository.PostViewCountRepository
 import org.springframework.context.event.EventListener
@@ -19,6 +20,8 @@ class PostViewCountUpdateListener(
             }.let { it.copy(ips = it.ips + e.ip) }
             .let { postViewCountRepository.save(it) }
     }
-    
-    //TODO PostDeleteEvent 받아서 조회수 정보 제거
+
+    @EventListener(PostDeleteEvent::class)
+    fun handle(e: PostDeleteEvent) =
+        postViewCountRepository.deleteById(e.idx)
 }
