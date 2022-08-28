@@ -1,5 +1,6 @@
 package gg.dak.board_api.domain.post.service
 
+import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.repository.PostRepository
@@ -8,9 +9,13 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import java.util.*
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 class PostQueryServiceTest {
@@ -23,6 +28,25 @@ class PostQueryServiceTest {
         postRepository = mock()
         postConverter = mock()
         target = PostQueryServiceImpl(postRepository, postConverter)
+    }
+
+    @Test @DisplayName("PostQueryService - 전체 게시글목록 조회 성공테스트")
+    fun testFindAllAccount_positive() {
+        //given
+        val page = Random.nextInt().absoluteValue
+        val size = (1..100).random()
+        val pagination = PageRequest.of(page, size)
+        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val data = PageImpl(posts)
+        val dto = mock<PostDto>()
+
+        //when
+        whenever(postRepository.findBy(pagination)).thenReturn(data)
+        whenever(postConverter.toDto(any<Post>())).thenReturn(dto)
+
+        //then
+        val result = target.findAllPost(pagination)
+        Assertions.assertTrue(result.content.stream().allMatch { it == dto })
     }
 
     @Test @DisplayName("PostQueryService - 인덱스로 게시글 조회 성공테스트")
