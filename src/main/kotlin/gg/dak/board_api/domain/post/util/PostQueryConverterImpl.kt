@@ -1,6 +1,7 @@
 package gg.dak.board_api.domain.post.util
 
 import gg.dak.board_api.domain.post.data.dto.PostDto
+import gg.dak.board_api.domain.post.data.response.PageablePostQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
 import org.springframework.stereotype.Component
 
@@ -14,4 +15,8 @@ class PostQueryConverterImpl: PostQueryConverter {
         category = dto.category,
         board = dto.board,
     )
+
+    override fun toPageableResponse(list: List<PostQueryResponse>): PageablePostQueryResponse {
+        TODO("Not yet implemented")
+    }
 }

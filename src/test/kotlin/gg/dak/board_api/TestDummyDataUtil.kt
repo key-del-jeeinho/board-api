@@ -54,4 +54,6 @@ object TestDummyDataUtil {
         category = entity.category,
         board = entity.board,
     )
+
+    fun postDto() = toDto(post())
 }
