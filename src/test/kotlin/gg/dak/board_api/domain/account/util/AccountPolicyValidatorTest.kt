@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.Optional
@@ -31,13 +33,17 @@ class AccountPolicyValidatorTest {
     fun testRegisterPolicyValidate_success() {
         //given
         val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
+        val id = TestDummyDataUtil.id()
         val dto = mock<AccountDto>()
 
         //when
         whenever(dto.nickname).thenReturn(nickname)
+        whenever(dto.id).thenReturn(id)
+        whenever(accountRepository.existsById(id)).thenReturn(false)
 
         //then
         assertDoesNotThrow { target.validate(OperationType.REGISTER, dto) }
+        verify(accountRepository, times(1)).existsById(id)
     }
 
     /* AccountPolicyValidator - 로그인 정책 검사 성공테스트

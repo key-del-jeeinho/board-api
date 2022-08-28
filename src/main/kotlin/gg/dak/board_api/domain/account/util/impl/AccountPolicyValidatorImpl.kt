@@ -17,9 +17,13 @@ class AccountPolicyValidatorImpl(
     override fun validate(operation: OperationType, dto: AccountDto) =
         when(operation) {
             //수행할 작업이 "회원가입"일 경우, 이에대한 정책을 검증합니다.
-            OperationType.REGISTER -> validateRegisterNickname(dto.nickname)
+            OperationType.REGISTER -> validateRegisterNickname(dto.nickname).let { validateRegisterId(dto.id) }
             OperationType.LOGIN -> validateLoginAuthInfo(dto.id, dto.password)
         }
+
+    private fun validateRegisterId(id: String) {
+        if (accountRepository.existsById(id)) throw PolicyValidationException("회원가입 정책을 위반하였습니다!", "이미 존재하는 아이디입니다.")
+    }
 
     //유저의 닉네임은 2~5자 사이여야합니다.
     private fun validateRegisterNickname(nickname: String) {
