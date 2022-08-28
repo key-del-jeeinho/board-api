@@ -9,4 +9,5 @@ interface PostQueryService {
     fun findAllPost(pagination: PageRequest): Page<PostDto>
     fun findPostByIndex(idx: Long): PostDto
     fun findAllPostByBoard(pagination: PageRequest, boardId: BoardType): Page<PostDto>
+    fun findAllPostByWriterIdx(pagination: PageRequest, writerIdx: Long): Page<PostDto>
 }

@@ -45,4 +45,15 @@ class PostQueryController(
             .map { postQueryConverter.toResponse(it) }
             .let { postQueryConverter.toPageableResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
+
+    @ApiOperation(value = "작성자별 계정목록 조회(with Pagination)", notes = "페이지네이션된 작성자별 게시글목록을 조회합니다.")
+    @GetMapping("/writer{writerIdx}")
+    fun findAllPostByWriterIdxWithPagination(
+        @PathVariable writerIdx: Long,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int): ResponseEntity<PageablePostQueryResponse> =
+        postQueryService.findAllPostByWriterIdx(PageRequest.of(page, size), writerIdx)
+            .map { postQueryConverter.toResponse(it) }
+            .let { postQueryConverter.toPageableResponse(it.toList()) }
+            .let { ResponseEntity.ok(it) }
 }

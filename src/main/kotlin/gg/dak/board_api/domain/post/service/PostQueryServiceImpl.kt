@@ -28,4 +28,8 @@ class PostQueryServiceImpl(
     override fun findAllPostByBoard(pagination: PageRequest, boardId: BoardType): Page<PostDto> =
         postRepository.findAllByBoard(pagination, boardId)
             .map { postConverter.toDto(it) }
+
+    override fun findAllPostByWriterIdx(pagination: PageRequest, writerIdx: Long): Page<PostDto> {
+        TODO("Not yet implemented")
+    }
 }
