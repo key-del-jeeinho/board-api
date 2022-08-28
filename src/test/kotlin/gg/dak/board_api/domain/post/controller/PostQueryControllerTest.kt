@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.post.controller
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.domain.post.data.dto.PostDto
+import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.response.PostQueryResponse
@@ -43,7 +43,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postDto() }
+        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()
@@ -65,7 +65,7 @@ class PostQueryControllerTest {
         //given
         val idx = Random.nextLong()
         val ip = TestDummyDataUtil.ip()
-        val dto = mock<PostDto>()
+        val dto = mock<PostQueryDto>()
         val response = mock<PostQueryResponse>()
         val event = mock<PostQueryEvent>()
 
@@ -90,7 +90,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postDto() }
+        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()
@@ -114,7 +114,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postDto() }
+        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()

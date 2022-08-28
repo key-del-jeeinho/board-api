@@ -3,9 +3,11 @@ package gg.dak.board_api
 import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.post.data.dto.PostDto
+import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.entity.Post
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.data.type.CategoryType
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 object TestDummyDataUtil {
@@ -56,5 +58,15 @@ object TestDummyDataUtil {
     )
 
     fun postDto() = toDto(post())
+    fun postQueryDto() = postDto().let { dto -> PostQueryDto(
+        idx = dto.idx,
+        writerIdx = dto.writerIdx,
+        title = dto.title,
+        content = dto.content,
+        category = dto.category,
+        board = dto.board,
+        views = views()
+    ) }
+    fun views() = Random.nextInt().absoluteValue
     fun ip() = "${(1..255).random()}.${(1..255).random()}.${(1..255).random()}.${(1..255).random()}"
 }
