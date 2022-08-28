@@ -8,5 +8,6 @@ data class PostSummeryQueryResponse(
     val writerIdx: Long,
     val title: String,
     val category: CategoryType,
-    val board: BoardType
+    val board: BoardType,
+    val views: Int
 )
