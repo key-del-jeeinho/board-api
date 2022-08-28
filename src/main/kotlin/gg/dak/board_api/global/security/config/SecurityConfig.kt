@@ -1,5 +1,6 @@
 package gg.dak.board_api.global.security.config
 
+import gg.dak.board_api.global.error.filter.ExceptionHandlerFilter
 import gg.dak.board_api.global.security.filter.JwtAuthenticateFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,7 +16,7 @@ class SecurityConfig {
     fun passwordEncoder() = BCryptPasswordEncoder()
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity, jwtAuthenticateFilter: JwtAuthenticateFilter, /*exceptionHandlerFilter: ExceptionHandlerFilter*/): SecurityFilterChain =
+    fun securityFilterChain(http: HttpSecurity, jwtAuthenticateFilter: JwtAuthenticateFilter, exceptionHandlerFilter: ExceptionHandlerFilter): SecurityFilterChain =
         http.csrf().disable()
             .cors().disable()
             .authorizeRequests()
@@ -27,5 +28,6 @@ class SecurityConfig {
             .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**").permitAll()
             .and()
             .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(exceptionHandlerFilter, JwtAuthenticateFilter::class.java)
             .build()
 }
