@@ -6,6 +6,6 @@ import gg.dak.board_api.domain.account.data.response.PageableAccountQueryRespons
 
 interface AccountQueryConverter {
     fun toResponse(dto: AccountDto): AccountQueryResponse
-    fun toPageabelResponse(list: List<AccountQueryResponse>): PageableAccountQueryResponse
+    fun toPageableResponse(list: List<AccountQueryResponse>): PageableAccountQueryResponse
 
 }

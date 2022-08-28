@@ -49,7 +49,7 @@ class AccountQueryControllerTest {
         //when
         whenever(accountQueryService.findAllAccount(pagination)).thenReturn(data)
         whenever(accountQueryConverter.toResponse(any())).thenReturn(response)
-        whenever(accountQueryConverter.toPageabelResponse(any())).thenReturn(pageableResponse)
+        whenever(accountQueryConverter.toPageableResponse(any())).thenReturn(pageableResponse)
 
         //then
         val result = target.findAllAccountWithPagination(page = page, size = size)
