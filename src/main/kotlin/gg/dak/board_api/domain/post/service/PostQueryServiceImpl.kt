@@ -6,7 +6,9 @@ import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.util.PostConverter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.stereotype.Service
 
+@Service
 class PostQueryServiceImpl(
     private val postRepository: PostRepository,
     private val postConverter: PostConverter
