@@ -3,9 +3,11 @@ package gg.dak.board_api.domain.post.service
 import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.entity.Post
+import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.util.PostConverter
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -31,7 +33,7 @@ class PostQueryServiceTest {
     }
 
     @Test @DisplayName("PostQueryService - 전체 게시글목록 조회 성공테스트")
-    fun testFindAllAccount_positive() {
+    fun testFindAllPost_positive() {
         //given
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
@@ -46,11 +48,31 @@ class PostQueryServiceTest {
 
         //then
         val result = target.findAllPost(pagination)
-        Assertions.assertTrue(result.content.stream().allMatch { it == dto })
+        assertTrue(result.content.stream().allMatch { it == dto })
+    }
+
+    @Test @DisplayName("PostQueryService - 게시판별 게시글목록 조회 성공테스트")
+    fun testFindAllPostByBoard_positive() {
+        //given
+        val board = BoardType.values().random()
+        val page = Random.nextInt().absoluteValue
+        val size = (1..100).random()
+        val pagination = PageRequest.of(page, size)
+        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val data = PageImpl(posts)
+        val dto = mock<PostDto>()
+
+        //when
+        whenever(postRepository.findAllByBoard(pagination, board)).thenReturn(data)
+        whenever(postConverter.toDto(any<Post>())).thenReturn(dto)
+
+        //then
+        val result = target.findAllPostByBoard(pagination, board)
+        assertTrue(result.content.stream().allMatch { it == dto })
     }
 
     @Test @DisplayName("PostQueryService - 인덱스로 게시글 조회 성공테스트")
-    fun testFindAccountByIndex_positive() {
+    fun testFindPostByIndex_positive() {
         //given
         val idx = Random.nextLong()
         val entity = mock<Post>()
@@ -63,6 +85,6 @@ class PostQueryServiceTest {
 
         //then
         val result = target.findPostByIndex(idx)
-        Assertions.assertEquals(result, dto)
+        assertEquals(result, dto)
     }
 }
