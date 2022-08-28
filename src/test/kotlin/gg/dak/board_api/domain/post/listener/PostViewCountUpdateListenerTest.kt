@@ -27,25 +27,42 @@ class PostViewCountUpdateListenerTest {
     @Test @DisplayName("PostViewCountUpdateListener - 게시글 조회수 추가 성공테스트A")
     fun testUpdatePostViewCount_positiveA() { //만약 이미 게시글 조회수 정보가 존재할 경우
         //given
-        val idx = Random.nextLong()
+        val postIdx = Random.nextLong()
         val viewCount = (1..100).random()
         val ip = TestDummyDataUtil.ip()
         val ips = (1..viewCount).map { TestDummyDataUtil.ip() }.filter { it != ip }
         val event = mock<PostQueryEvent>()
-        val entity = PostViewCount(idx, (ips).toSet())
+        val entity = PostViewCount(postIdx, (ips).toSet())
         val optional = Optional.of(entity)
-        val newEntity = PostViewCount(idx, (ips + ip).toSet())
+        val newEntity = PostViewCount(postIdx, (ips + ip).toSet())
         val savedEntity = mock<PostViewCount>()
 
         //when
-        whenever(event.idx).thenReturn(idx)
+        whenever(event.idx).thenReturn(postIdx)
         whenever(event.ip).thenReturn(ip)
-        whenever(postViewCountRepository.existsById(idx)).thenReturn(true)
-        whenever(postViewCountRepository.findById(idx)).thenReturn(optional)
+        whenever(postViewCountRepository.existsById(postIdx)).thenReturn(true)
+        whenever(postViewCountRepository.findById(postIdx)).thenReturn(optional)
         whenever(postViewCountRepository.save(newEntity)).thenReturn(savedEntity)
 
         //then
         target.handle(event)
         verify(postViewCountRepository, times(1)).save(newEntity)
+    }
+    @Test @DisplayName("PostViewCountUpdateListener - 게시글 조회수 추가 성공테스트B")
+    fun testUpdatePostViewCount_positiveB() { //만약 게시글 조회수 정보가 존재히지 않을 경우
+        //given
+        val postIdx = Random.nextLong()
+        val ip = TestDummyDataUtil.ip()
+        val event = mock<PostQueryEvent>()
+        val entity = PostViewCount(postIdx, setOf(ip))
+
+        //when
+        whenever(event.idx).thenReturn(postIdx)
+        whenever(event.ip).thenReturn(ip)
+        whenever(postViewCountRepository.existsById(postIdx)).thenReturn(false)
+
+        //then
+        target.handle(event)
+        verify(postViewCountRepository, times(1)).save(entity)
     }
 }
