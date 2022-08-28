@@ -56,4 +56,5 @@ object TestDummyDataUtil {
     )
 
     fun postDto() = toDto(post())
+    fun ip() = "${(1..255).random()}.${(1..255).random()}.${(1..255).random()}.${(1..255).random()}"
 }

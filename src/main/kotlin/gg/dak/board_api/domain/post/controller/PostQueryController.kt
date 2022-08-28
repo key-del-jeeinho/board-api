@@ -5,8 +5,10 @@ import gg.dak.board_api.domain.post.data.response.PostQueryResponse
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
 import gg.dak.board_api.domain.post.util.PostQueryConverter
+import gg.dak.board_api.global.ip.service.RequestIpQueryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*
 class PostQueryController(
     private val postQueryConverter: PostQueryConverter,
     private val postQueryService: PostQueryService,
+    private val requestIpQueryService: RequestIpQueryService,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
     @ApiOperation(value = "전체 게시글목록 조회(with Pagination)", notes = "페이지네이션된 전체 게시글목록을 조회합니다.")
     @GetMapping("/all")
@@ -32,7 +36,11 @@ class PostQueryController(
     @GetMapping("/{idx}")
     fun findPostByIndex(@PathVariable idx: Long): ResponseEntity<PostQueryResponse> =
         postQueryService.findPostByIndex(idx)
-            .let { postQueryConverter.toResponse(it) }
+            .also { dto ->
+                requestIpQueryService.getCurrentRequestIp()
+                    .let { ip -> postQueryConverter.toEvent(dto, ip) }
+                    .let { event -> applicationEventPublisher.publishEvent(event) }
+            }.let { postQueryConverter.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "게시판별 게시글목록 조회(with Pagination)", notes = "페이지네이션된 게시판별 게시글목록을 조회합니다.")
