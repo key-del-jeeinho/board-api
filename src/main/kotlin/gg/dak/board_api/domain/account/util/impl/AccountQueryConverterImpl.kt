@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component
 @Component
 class AccountQueryConverterImpl: AccountQueryConverter {
     override fun toResponse(dto: AccountDto): AccountQueryResponse = AccountQueryResponse(idx = dto.idx, nickname = dto.nickname, id = dto.id)
-    override fun toPageabelResponse(list: List<AccountQueryResponse>): PageableAccountQueryResponse = PageableAccountQueryResponse(PageImpl(list))
+    override fun toPageableResponse(list: List<AccountQueryResponse>): PageableAccountQueryResponse = PageableAccountQueryResponse(PageImpl(list))
 }

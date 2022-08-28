@@ -29,7 +29,7 @@ class AccountQueryController(
     ): ResponseEntity<PageableAccountQueryResponse> =
         accountQueryService.findAllAccount(PageRequest.of(page, size))
             .map { accountQueryConverter.toResponse(it) }
-            .let { accountQueryConverter.toPageabelResponse(it.toList()) }
+            .let { accountQueryConverter.toPageableResponse(it.toList()) }
             .let { ResponseEntity.ok(it) }
 
     @ApiOperation(value = "인덱스로 계정 조회", notes = "계정의 인덱스로 계정정보를 조회합니다.")
@@ -39,10 +39,10 @@ class AccountQueryController(
             .let { accountQueryConverter.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
-    @ApiOperation(value = "아이디로 계정조회", notes = "계정의 아이디로 계정정보를 조회합니다..")
+    @ApiOperation(value = "아이디로 계정조회", notes = "계정의 아이디로 계정정보를 조회합니다.")
     @GetMapping("/id/{id}")
     fun findAccountById(@PathVariable id: String): ResponseEntity<AccountQueryResponse> =
-         accountQueryService.findAccountById(id)
-             .let { accountQueryConverter.toResponse(it) }
-             .let { ResponseEntity.ok(it) }
+        accountQueryService.findAccountById(id)
+            .let { accountQueryConverter.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
 }
