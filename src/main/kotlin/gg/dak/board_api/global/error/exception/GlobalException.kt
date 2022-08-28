@@ -1,4 +1,4 @@
-package gg.dak.board_api.global.error
+package gg.dak.board_api.global.error.exception
 
 interface GlobalException {
     fun getErrorMessage(): String
