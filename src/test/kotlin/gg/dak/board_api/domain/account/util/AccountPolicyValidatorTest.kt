@@ -1,21 +1,17 @@
 package gg.dak.board_api.domain.account.util
 
 import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.type.OperationType
-import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.impl.AccountPolicyValidatorImpl
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
+import gg.dak.board_api.global.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.repository.AccountRepository
+import gg.dak.board_api.global.common.exception.PolicyValidationException
+import org.junit.jupiter.api.*
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.util.Optional
+import java.util.*
 
 class AccountPolicyValidatorTest {
     private lateinit var accountRepository: AccountRepository
@@ -29,7 +25,8 @@ class AccountPolicyValidatorTest {
         target = AccountPolicyValidatorImpl(accountRepository, passwordEncoder)
     }
 
-    @Test @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 성공테스트")
+    @Test
+    @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 성공테스트")
     fun testRegisterPolicyValidate_success() {
         //given
         val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
@@ -43,7 +40,42 @@ class AccountPolicyValidatorTest {
 
         //then
         assertDoesNotThrow { target.validate(OperationType.REGISTER, dto) }
-        verify(accountRepository, times(1)).existsById(id)
+    }
+
+
+    @Test
+    @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 실패테스트 - 아이디가 중복되었을 경우")
+    fun testRegisterPolicyValidate_duplicateId() {
+        //given
+        val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
+        val id = TestDummyDataUtil.id()
+        val dto = mock<AccountDto>()
+
+        //when
+        whenever(dto.nickname).thenReturn(nickname)
+        whenever(dto.id).thenReturn(id)
+        whenever(accountRepository.existsById(id)).thenReturn(true)
+
+        //then
+        assertThrows<PolicyValidationException> { target.validate(OperationType.REGISTER, dto) }
+    }
+
+
+    @Test
+    @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 실패테스트 - 이름이 2자 미만이거나 5자 초과일 경우")
+    fun testRegisterPolicyValidate_wrongName() {
+        //given
+        val nickname = TestDummyDataUtil.nickname(length = listOf(6, 1).random())
+        val id = TestDummyDataUtil.id()
+        val dto = mock<AccountDto>()
+
+        //when
+        whenever(dto.nickname).thenReturn(nickname)
+        whenever(dto.id).thenReturn(id)
+        whenever(accountRepository.existsById(id)).thenReturn(false)
+
+        //then
+        assertThrows<PolicyValidationException> { target.validate(OperationType.REGISTER, dto) }
     }
 
     /* AccountPolicyValidator - 로그인 정책 검사 성공테스트
@@ -53,7 +85,8 @@ class AccountPolicyValidatorTest {
     - 인증정보의 id를 소유한 계정이 존재할 것
     - 인증정보의 password가 id를 소유한 계정의 암호와 동일할 것
      */
-    @Test @DisplayName("AccountPolicyValidator - 로그인 정책 검사 성공테스트")
+    @Test
+    @DisplayName("AccountPolicyValidator - 로그인 정책 검사 성공테스트")
     fun testLoginPolicyValidate_success() {
         //given
         val id = TestDummyDataUtil.id()
