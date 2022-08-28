@@ -41,7 +41,7 @@ class PostQueryControllerTest {
     fun testFindAllPostWithPagination() {
         //given
         val page = Random.nextInt().absoluteValue
-        val size = (0..100).random()
+        val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
@@ -88,7 +88,7 @@ class PostQueryControllerTest {
         //given
         val board = BoardType.values().random()
         val page = Random.nextInt().absoluteValue
-        val size = (0..100).random()
+        val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
@@ -112,7 +112,7 @@ class PostQueryControllerTest {
         //given
         val writerIdx = Random.nextLong()
         val page = Random.nextInt().absoluteValue
-        val size = (0..100).random()
+        val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
         val posts = (1..size).map { TestDummyDataUtil.postDto() }
         val data = PageImpl(posts)
