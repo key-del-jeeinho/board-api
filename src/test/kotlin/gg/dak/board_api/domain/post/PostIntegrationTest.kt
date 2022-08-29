@@ -27,18 +27,17 @@ class PostIntegrationTest: IntegrationTestBase() {
         TestComponentSource.initializeMockMvc(mvc)
         TestComponentSource.initializeObjectMapper(objectMapper)
     }
-
-    @Test @DisplayName("게시글 작성 통합테스트 - 작성 성공")//게시글 작성
-    fun testCreatePost() {
-        //given
-        dailyPostCountRepository.deleteAll()
+    @Test @DisplayName("게시글 작성 통합테스트 - 일일 작성한도를 초과하였을 경우")
+    fun testCreatePost_일일_작성한도를_초과하였을_경우() {
+        TestUtil.command().account().create()
         val title = TestUtil.data().post().title()
         val content = TestUtil.data().post().content()
         val category = CategoryType.values().random()
         val board = BoardType.values().random()
         val request = CreatePostRequest(title, content, category, board)
 
-        //when
+        dailyPostCountRepository.deleteAll()
+
         val accessToken = TestUtil.query().account().accessToken("string", "string")
         val resultAction = mvc.perform(post("/api/v1/post")
             .contentType(MediaType.APPLICATION_JSON)
@@ -47,7 +46,30 @@ class PostIntegrationTest: IntegrationTestBase() {
             .header("Authorization", "Bearer $accessToken"))
             .andDo{ println(it) }
 
-        //then
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("idx", `is`(notNullValue())))
+    }
+
+    @Test @DisplayName("게시글 작성 통합테스트 - 작성 성공")
+    fun testCreatePost() {
+        //given
+        val title = TestUtil.data().post().title()
+        val content = TestUtil.data().post().content()
+        val category = CategoryType.values().random()
+        val board = BoardType.values().random()
+        val request = CreatePostRequest(title, content, category, board)
+
+        dailyPostCountRepository.deleteAll()
+
+        val accessToken = TestUtil.query().account().accessToken("string", "string")
+        val resultAction = mvc.perform(post("/api/v1/post")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+            .accept(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer $accessToken"))
+            .andDo{ println(it) }
+
         resultAction
             .andExpect(status().isOk)
             .andExpect(jsonPath("idx", `is`(notNullValue())))

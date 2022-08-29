@@ -1,9 +1,12 @@
 package gg.dak.board_api.test_utils
 
+import gg.dak.board_api.domain.account.data.request.RegisterRequest
+
 object TestUtil {
     fun data() = TestDataUtil
     fun convert() = TestConvertUtil
-    fun query() = TestGenerateUtil
+    fun query() = TestQueryUtil
+    fun command() = TestCommandUtil
 
     object TestDataUtil {
         fun account() = AccountDataUtil
@@ -13,7 +16,10 @@ object TestUtil {
         fun post() = PostDataConvertUtil
     }
 
-    object TestGenerateUtil {
+    object TestQueryUtil {
         fun account() = AccountQueryUtil
+    }
+    object TestCommandUtil {
+        fun register(request: RegisterRequest)
     }
 }
