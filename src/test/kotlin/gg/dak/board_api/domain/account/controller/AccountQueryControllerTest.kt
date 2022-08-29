@@ -1,11 +1,11 @@
 package gg.dak.board_api.domain.account.controller
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.response.AccountQueryResponse
 import gg.dak.board_api.domain.account.data.response.PageableAccountQueryResponse
 import gg.dak.board_api.domain.account.service.AccountQueryService
 import gg.dak.board_api.domain.account.util.AccountQueryConverter
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -41,7 +41,7 @@ class AccountQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (0..100).random()
         val pagination = PageRequest.of(page, size)
-        val accounts = (1..size).map { TestDummyDataUtil.accountDto(isPasswordEncoded = true) }
+        val accounts = (1..size).map { TestUtil.data().account().dto(isPasswordEncoded = true) }
         val data = PageImpl(accounts)
         val response = mock<AccountQueryResponse>()
         val pageableResponse = mock<PageableAccountQueryResponse>()
@@ -89,7 +89,7 @@ class AccountQueryControllerTest {
     @Test @DisplayName("AccountQueryController - ID로 계정조회 성공테스트")
     fun testFindAccountById_positive() {
         //given
-        val id = TestDummyDataUtil.id()
+        val id = TestUtil.data().account().id()
         val dto = mock<AccountDto>()
         val response = mock<AccountQueryResponse>()
 

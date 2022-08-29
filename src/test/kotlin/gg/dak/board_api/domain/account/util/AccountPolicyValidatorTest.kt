@@ -1,12 +1,12 @@
 package gg.dak.board_api.domain.account.util
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.util.impl.AccountPolicyValidatorImpl
 import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.global.common.exception.PolicyValidationException
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.*
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -29,8 +29,8 @@ class AccountPolicyValidatorTest {
     @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 성공테스트")
     fun testRegisterPolicyValidate_success() {
         //given
-        val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
-        val id = TestDummyDataUtil.id()
+        val nickname = TestUtil.data().account().nickname(length = (2..5).random())
+        val id = TestUtil.data().account().id()
         val dto = mock<AccountDto>()
 
         //when
@@ -47,8 +47,8 @@ class AccountPolicyValidatorTest {
     @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 실패테스트 - 아이디가 중복되었을 경우")
     fun testRegisterPolicyValidate_duplicateId() {
         //given
-        val nickname = TestDummyDataUtil.nickname(length = (2..5).random())
-        val id = TestDummyDataUtil.id()
+        val nickname = TestUtil.data().account().nickname(length = (2..5).random())
+        val id = TestUtil.data().account().id()
         val dto = mock<AccountDto>()
 
         //when
@@ -65,8 +65,8 @@ class AccountPolicyValidatorTest {
     @DisplayName("AccountPolicyValidator - 회원가입 정책 검사 실패테스트 - 이름이 2자 미만이거나 5자 초과일 경우")
     fun testRegisterPolicyValidate_wrongName() {
         //given
-        val nickname = TestDummyDataUtil.nickname(length = listOf(6, 1).random())
-        val id = TestDummyDataUtil.id()
+        val nickname = TestUtil.data().account().nickname(length = listOf(6, 1).random())
+        val id = TestUtil.data().account().id()
         val dto = mock<AccountDto>()
 
         //when
@@ -89,9 +89,9 @@ class AccountPolicyValidatorTest {
     @DisplayName("AccountPolicyValidator - 로그인 정책 검사 성공테스트")
     fun testLoginPolicyValidate_success() {
         //given
-        val id = TestDummyDataUtil.id()
-        val password = TestDummyDataUtil.password()
-        val encodedPassword = TestDummyDataUtil.encodedPassword()
+        val id = TestUtil.data().account().id()
+        val password = TestUtil.data().account().password()
+        val encodedPassword = TestUtil.data().account().encodedPassword()
         val dto = mock<AccountDto>()
         val optional = mock<Optional<Account>>()
         val entity = mock<Account>()

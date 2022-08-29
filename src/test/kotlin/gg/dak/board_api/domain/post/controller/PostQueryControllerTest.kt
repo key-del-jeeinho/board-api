@@ -1,6 +1,5 @@
 package gg.dak.board_api.domain.post.controller
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
@@ -10,6 +9,7 @@ import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
 import gg.dak.board_api.domain.post.util.PostQueryConverter
 import gg.dak.board_api.global.ip.service.RequestIpQueryService
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -43,7 +43,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
+        val posts = (1..size).map { TestUtil.data().post().queryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()
@@ -64,7 +64,7 @@ class PostQueryControllerTest {
     fun testFindPostByIndex() {
         //given
         val idx = Random.nextLong()
-        val ip = TestDummyDataUtil.ip()
+        val ip = TestUtil.data().post().ip()
         val dto = mock<PostQueryDto>()
         val response = mock<PostQueryResponse>()
         val event = mock<PostQueryEvent>()
@@ -90,7 +90,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
+        val posts = (1..size).map { TestUtil.data().post().queryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()
@@ -114,7 +114,7 @@ class PostQueryControllerTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.postQueryDto() }
+        val posts = (1..size).map { TestUtil.data().post().queryDto() }
         val data = PageImpl(posts)
         val response = mock<PostSummeryQueryResponse>()
         val pageableResponse = mock<PageablePostSummeryQueryResponse>()

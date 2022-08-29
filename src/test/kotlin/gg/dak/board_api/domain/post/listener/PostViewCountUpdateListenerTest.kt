@@ -1,10 +1,10 @@
 package gg.dak.board_api.domain.post.listener
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.entity.PostViewCount
 import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
 import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.repository.PostViewCountRepository
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -30,8 +30,8 @@ class PostViewCountUpdateListenerTest {
         //given
         val postIdx = Random.nextLong()
         val viewCount = (1..100).random()
-        val ip = TestDummyDataUtil.ip()
-        val ips = (1..viewCount).map { TestDummyDataUtil.ip() }.filter { it != ip }
+        val ip = TestUtil.data().post().ip()
+        val ips = (1..viewCount).map { TestUtil.data().post().ip() }.filter { it != ip }
         val event = mock<PostQueryEvent>()
         val entity = PostViewCount(postIdx, (ips).toSet())
         val optional = Optional.of(entity)
@@ -53,7 +53,7 @@ class PostViewCountUpdateListenerTest {
     fun testUpdatePostViewCount_positiveB() { //만약 게시글 조회수 정보가 존재히지 않을 경우
         //given
         val postIdx = Random.nextLong()
-        val ip = TestDummyDataUtil.ip()
+        val ip = TestUtil.data().post().ip()
         val event = mock<PostQueryEvent>()
         val entity = PostViewCount(postIdx, setOf(ip))
 

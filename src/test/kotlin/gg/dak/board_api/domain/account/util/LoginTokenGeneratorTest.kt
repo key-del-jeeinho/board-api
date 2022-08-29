@@ -1,6 +1,5 @@
 package gg.dak.board_api.domain.account.util
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.enitty.RefreshToken
 import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
@@ -9,6 +8,7 @@ import gg.dak.board_api.domain.account.repository.RefreshTokenRepository
 import gg.dak.board_api.domain.account.repository.UuidTokenRepository
 import gg.dak.board_api.domain.account.util.impl.LoginTokenGeneratorImpl
 import gg.dak.board_api.global.account.util.UuidTokenGenerator
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -48,11 +48,11 @@ class LoginTokenGeneratorTest {
     @Test @DisplayName("LoginTokenGenerator - 로그인 토큰 생성 성공테스트A")
     fun testGenerateLoginToken_positiveA() { //기존에 재발급토큰이 존재하지 않았을 경우
         //given
-        val id = TestDummyDataUtil.id()
+        val id = TestUtil.data().account().id()
         val refreshTokenExpireSecond = Random.nextLong()
         val accessTokenExpireSecond = Random.nextLong()
-        val accessToken = TestDummyDataUtil.token()
-        val refreshToken = TestDummyDataUtil.token()
+        val accessToken = TestUtil.data().account().token()
+        val refreshToken = TestUtil.data().account().token()
         val optional = Optional.empty<RefreshToken>()
 
         //when
@@ -80,12 +80,12 @@ class LoginTokenGeneratorTest {
     @Test @DisplayName("LoginTokenGenerator - 로그인 토큰 생성 성공테스트B")
     fun testGenerateLoginToken_positiveB() { //기존에 재발급토큰이 존재하였을 경우
         //given
-        val id = TestDummyDataUtil.id()
+        val id = TestUtil.data().account().id()
         val refreshTokenExpireSecond = Random.nextLong()
         val accessTokenExpireSecond = Random.nextLong()
-        val accessToken = TestDummyDataUtil.token()
-        val legacyRefreshToken = TestDummyDataUtil.token()
-        val refreshToken = TestDummyDataUtil.token()
+        val accessToken = TestUtil.data().account().token()
+        val legacyRefreshToken = TestUtil.data().account().token()
+        val refreshToken = TestUtil.data().account().token()
         val refreshTokenEntity = RefreshToken(id, legacyRefreshToken, -1)
         val optional = Optional.of(refreshTokenEntity)
 

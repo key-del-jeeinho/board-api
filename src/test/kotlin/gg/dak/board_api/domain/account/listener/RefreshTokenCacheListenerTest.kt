@@ -1,10 +1,10 @@
 package gg.dak.board_api.domain.account.listener
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.config.LoginProperties
 import gg.dak.board_api.domain.account.data.enitty.RefreshToken
 import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.repository.RefreshTokenRepository
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -35,9 +35,9 @@ class RefreshTokenCacheListenerTest {
     @Test @DisplayName("RefreshTokenCacheListener - 재발급 토큰 캐싱 성공테스트")
     fun testCachingRefreshToken_positive() {
         //given
-        val id = TestDummyDataUtil.id()
-        val accessToken = TestDummyDataUtil.token()
-        val refreshToken = TestDummyDataUtil.token()
+        val id = TestUtil.data().account().id()
+        val accessToken = TestUtil.data().account().token()
+        val refreshToken = TestUtil.data().account().token()
         val ttl = Random.nextLong()
         val event = LoginTokenCreateEvent(id, accessToken = accessToken, refreshToken = refreshToken)
         val entity = RefreshToken(id = id, token = refreshToken, timeToLive = ttl)

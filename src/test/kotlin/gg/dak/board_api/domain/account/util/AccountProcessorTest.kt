@@ -1,9 +1,8 @@
 package gg.dak.board_api.domain.account.util
 
-import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.util.impl.AccountProcessorImpl
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +13,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.security.crypto.password.PasswordEncoder
-import kotlin.random.Random
 
 class AccountProcessorTest {
     private lateinit var passwordEncoder: PasswordEncoder
@@ -36,20 +34,11 @@ class AccountProcessorTest {
     @Test @DisplayName("AccountProcessor - 회원가입 데이터 전처리 성공테스트")
     fun testRegisterDataProcess_positive() {
         //given
-        val id = TestDummyDataUtil.id()
-        val password = TestDummyDataUtil.password()
-        val nickname = TestDummyDataUtil.nickname((2..5).random())
-        val dto = AccountDto(
-            idx = Random.nextLong(1, Long.MAX_VALUE),
-            nickname = nickname,
-            id = id,
-            password = password,
-            isPasswordEncoded = false
-        )
-        val encodedPassword = TestDummyDataUtil.encodedPassword()
+        val dto = TestUtil.data().account().dto(false)
+        val encodedPassword = TestUtil.data().account().encodedPassword()
 
         //when
-        whenever(passwordEncoder.encode(password)).thenReturn(encodedPassword)
+        whenever(passwordEncoder.encode(dto.password)).thenReturn(encodedPassword)
 
         //then
         val result = target.process(OperationType.REGISTER, dto)
@@ -57,6 +46,6 @@ class AccountProcessorTest {
         assertEquals(result.idx, 0)
         assertTrue(result.isPasswordEncoded)
         assertEquals(result.password, encodedPassword)
-        verify(passwordEncoder, times(1)).encode(password)
+        verify(passwordEncoder, times(1)).encode(dto.password)
     }
 }

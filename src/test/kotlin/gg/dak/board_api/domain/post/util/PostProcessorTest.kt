@@ -1,9 +1,9 @@
 package gg.dak.board_api.domain.post.util
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.type.PostOperationType
 import gg.dak.board_api.domain.post.repository.PostRepository
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -54,10 +54,10 @@ class PostProcessorTest {
     fun testProcessUpdatePost_positive() {
         //given
         val dto = mock<PostDto>()
-        val updateContent = TestDummyDataUtil.content()
-        val entity = TestDummyDataUtil.post()
+        val updateContent = TestUtil.data().post().content()
+        val entity = TestUtil.data().post().entity()
         val idx = entity.idx
-        val updatedDto = TestDummyDataUtil.updatePost(entity, updateContent).let { TestDummyDataUtil.toDto(it) }
+        val updatedDto = TestUtil.convert().post().updatePost(entity, updateContent).let { TestUtil.convert().post().toDto(it) }
         val optional = Optional.of(entity)
 
         //when
