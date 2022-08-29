@@ -1,72 +1,30 @@
 package gg.dak.board_api
 
-import gg.dak.board_api.global.account.data.dto.AccountDto
-import gg.dak.board_api.domain.account.data.enitty.Account
-import gg.dak.board_api.domain.post.data.dto.PostDto
-import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.entity.Post
-import gg.dak.board_api.domain.post.data.type.BoardType
-import gg.dak.board_api.domain.post.data.type.CategoryType
-import kotlin.math.absoluteValue
-import kotlin.random.Random
+import gg.dak.board_api.test_utils.AccountDataUtil
+import gg.dak.board_api.test_utils.PostDataConvertUtil
+import gg.dak.board_api.test_utils.PostDataUtil
 
+@Deprecated("TestUtil을 사용해주세요!")
 object TestDummyDataUtil {
-    fun nickname(length: Int) = listOf("닥지지", "라울", "아무닉", "가나다라마", "앰비션뮤직", "G", "스프링MVC", "스카니아", "깡", "메이플스토리").filter { it.length == length }.random()
-    fun id() = listOf("abcd123", "develop_raul", "qwer1234").random()
-    fun password() = listOf("helloworld0123!", "b0ard!ap1", "pa5sw0r|)").random()
-    fun encodedPassword() = listOf("az+Dasc98As=8a", "s=1Scat1l2_", "s+lcjm4=32kco1p").random()
-    fun token() = listOf("98A2+az+DSs=8sca1c2_", "cjStl2_m41lsca=1", "csjca12+at1llm4=3ascko1p").random()
-    fun accountDto(isPasswordEncoded: Boolean) = AccountDto(
-        idx = Random.nextLong(),
-        nickname = nickname((2..5).random()),
-        id = id(),
-        password = if(isPasswordEncoded) encodedPassword() else password(),
-        isPasswordEncoded = isPasswordEncoded
-    )
-    fun account() = Account(
-        idx = Random.nextLong(),
-        nickName = nickname((2..5).random()),
-        id = id(),
-        encodedPassword = encodedPassword())
+    fun nickname(length: Int) = AccountDataUtil.nickname(length)
+    fun id() = AccountDataUtil.id()
+    fun password() = AccountDataUtil.password()
+    fun encodedPassword() = AccountDataUtil.encodedPassword()
+    fun token() = AccountDataUtil.token()
+    fun accountDto(isPasswordEncoded: Boolean) = AccountDataUtil.dto(isPasswordEncoded)
+    fun account() = AccountDataUtil.entity()
 
-    fun post() = Post(
-        idx = Random.nextLong(),
-        writerIdx = Random.nextLong(),
-        title = "제목",
-        content = content(),
-        category = CategoryType.values().random(),
-        board = BoardType.values().random()
-    )
+    fun post() = PostDataUtil.entity()
+    fun title() = PostDataUtil.title()
 
-    fun content() = listOf("내용", "내용일지도", "내용일거야", "ㅈㄱㄴ").random()
-    fun updatePost(entity: Post, updateContent: String) = Post(
-        idx = entity.idx,
-        writerIdx = entity.writerIdx,
-        title = entity.title,
-        content = updateContent,
-        category = entity.category,
-        board = entity.board,
-    )
+    fun content() = PostDataUtil.content()
+    fun updatePost(entity: Post, updateContent: String) = PostDataConvertUtil.updatePost(entity, updateContent)
 
-    fun toDto(entity: Post) = PostDto(
-        idx = entity.idx,
-        writerIdx = entity.writerIdx,
-        title = entity.title,
-        content = entity.content,
-        category = entity.category,
-        board = entity.board,
-    )
+    fun toDto(entity: Post) = PostDataConvertUtil.toDto(entity)
 
-    fun postDto() = toDto(post())
-    fun postQueryDto() = postDto().let { dto -> PostQueryDto(
-        idx = dto.idx,
-        writerIdx = dto.writerIdx,
-        title = dto.title,
-        content = dto.content,
-        category = dto.category,
-        board = dto.board,
-        views = views()
-    ) }
-    fun views() = Random.nextInt().absoluteValue
-    fun ip() = "${(1..255).random()}.${(1..255).random()}.${(1..255).random()}.${(1..255).random()}"
+    fun postDto() = PostDataUtil.dto()
+    fun postQueryDto() = PostDataUtil.queryDto()
+    fun views() = PostDataUtil.views()
+    fun ip() = PostDataUtil.ip()
 }
