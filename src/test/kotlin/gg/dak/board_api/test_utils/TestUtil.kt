@@ -3,7 +3,7 @@ package gg.dak.board_api.test_utils
 object TestUtil {
     fun data() = TestDataUtil
     fun convert() = TestConvertUtil
-    fun generate() = TestGenerateUtil
+    fun query() = TestGenerateUtil
 
     object TestDataUtil {
         fun account() = AccountDataUtil
@@ -14,6 +14,6 @@ object TestUtil {
     }
 
     object TestGenerateUtil {
-        fun account() = AccountGenerateUtil
+        fun account() = AccountQueryUtil
     }
 }

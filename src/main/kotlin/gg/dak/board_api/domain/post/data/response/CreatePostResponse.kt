@@ -1,3 +1,3 @@
 package gg.dak.board_api.domain.post.data.response
 
-class CreatePostResponse(idx: Long)
+data class CreatePostResponse(val idx: Long)
