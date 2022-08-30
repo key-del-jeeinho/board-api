@@ -1,0 +1,22 @@
+spring:
+  redis:
+    host: ${REDIS_URL}
+    port: ${REDIS_PORT}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USERNAME}
+  profiles:
+    active: ${SPRING_PROFILE}
+account:
+  login:
+    refresh-token-properties:
+      expire-second: 604800 #일주일
+    access-token-properties:
+      expire-second: 1800
+jwt:
+  secret-key: boardapiisgood
+  issuer: raul
+post:
+  daily-post-limit: 3
