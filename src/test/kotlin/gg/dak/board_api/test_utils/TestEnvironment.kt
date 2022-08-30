@@ -15,7 +15,8 @@ object TestEnvironment {
 
     fun createAccount(): AccountDto {
         val nickname = TestUtil.data().account().nickname()
-        val id = TestUtil.data().account().id()
+        var id = TestUtil.data().account().id()
+        while (TestComponentSource.accountRepository().existsById(id)) id = TestUtil.data().account().id()
         val password = TestUtil.data().account().password()
         val idx = TestUtil.command().account().create(RegisterRequest(nickname, id, password))
         return AccountDto(idx, nickname, id, password, false)

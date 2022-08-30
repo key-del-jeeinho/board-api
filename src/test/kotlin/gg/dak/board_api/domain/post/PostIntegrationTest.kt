@@ -9,6 +9,7 @@ import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.data.type.CategoryType
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
+import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.global.error.data.type.ErrorStatusType
 import gg.dak.board_api.test_utils.TestComponentSource
@@ -27,6 +28,8 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 class PostIntegrationTest: IntegrationTestBase() {
     @Autowired
@@ -37,6 +40,8 @@ class PostIntegrationTest: IntegrationTestBase() {
     private lateinit var accountRepository: AccountRepository
     @Autowired
     private lateinit var jwtTokenGenerator: JwtTokenGenerator
+    @Autowired
+    private lateinit var postRepository: PostRepository
 
     @BeforeEach
     fun setUp() {
@@ -45,6 +50,10 @@ class PostIntegrationTest: IntegrationTestBase() {
         TestComponentSource.initializeDailyPostCountRepository(dailyPostCountRepository)
         TestComponentSource.initializeAccountRepository(accountRepository)
         TestComponentSource.initializeJwtTokenGenerator(jwtTokenGenerator)
+
+        dailyPostCountRepository.deleteAll()
+        accountRepository.deleteAll()
+        postRepository.deleteAll()
     }
 
     @Test @DisplayName("게시글 삭제 통합테스트 - 삭제 성공")
@@ -61,6 +70,40 @@ class PostIntegrationTest: IntegrationTestBase() {
                 .andExpect(jsonPath("deletedPostIdx", `is`(notNullValue())))
     }
 
+    @Test @DisplayName("게시글 삭제 통합테스트 - 게시글이 존재하지 않을 경우")
+    fun testDeletePost_게시글이_존재하지_않을_경우() {
+        val account = createAccount()
+        val accessToken = createAccessToken(account)
+        val postIdx = Random.nextLong().absoluteValue
+
+        mvc.perform(delete("/api/v1/post/${postIdx}")
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer $accessToken"))
+                .andDo{ println(it.response.contentAsString) }
+                .andExpect(status().`is`(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("status", `is`(ErrorStatusType.POLICY_VIOLATION.name)))
+                .andExpect(jsonPath("message", `is`(notNullValue())))
+                .andExpect(jsonPath("details", `is`(notNullValue())))
+    }
+
+    @Test @DisplayName("게시글 삭제 통합테스트 - 게시글 작성자가 아닐경우")
+    fun testDeletePost_게시글_작성자가_아닐경우() {
+        val writerAccount = createAccount()
+        val writerAccessToken = createAccessToken(writerAccount)
+        val postIdx = createPost(writerAccessToken).idx
+        val issuerAccount = createAccount()
+        val issuerAccessToken = createAccessToken(issuerAccount)
+
+        mvc.perform(delete("/api/v1/post/${postIdx}")
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer $issuerAccessToken"))
+                .andDo { println(it.response.contentAsString) }
+                .andExpect(status().`is`(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("status", `is`(ErrorStatusType.POLICY_VIOLATION.name)))
+                .andExpect(jsonPath("message", `is`(notNullValue())))
+                .andExpect(jsonPath("details", `is`(notNullValue())))
+    }
+
     @Test @DisplayName("게시글 수정 통합테스트 - 수정 성공")
     fun testUpdatePost() {
         val account = createAccount()
@@ -70,13 +113,55 @@ class PostIntegrationTest: IntegrationTestBase() {
         val updatedContent = TestUtil.data().post().content()
 
         mvc.perform(put("/api/v1/post/${post.idx}")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(UpdatePostRequest(updatedContent)))
-            .accept(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer $accessToken"))
-            .andDo{ println(it.response.contentAsString) }
-            .andExpect(status().`is`(HttpStatus.OK.value()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(UpdatePostRequest(updatedContent)))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer $accessToken"))
+                .andDo{ println(it.response.contentAsString) }
+                .andExpect(status().`is`(HttpStatus.OK.value()))
                 .andExpect(jsonPath("updatedPostIdx", `is`(notNullValue())))
+    }
+
+    @Test @DisplayName("게시글 수정 통합테스트 - 게시글이 존재하지 않을 경우")
+    fun testUpdatePost_게시글이_존재하지_않을_경우() {
+        val account = createAccount()
+        val accessToken = createAccessToken(account)
+        val postIdx = Random.nextLong().absoluteValue
+
+        val updatedContent = TestUtil.data().post().content()
+
+        mvc.perform(put("/api/v1/post/${postIdx}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(UpdatePostRequest(updatedContent)))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer $accessToken"))
+                .andDo{ println(it.response.contentAsString) }
+                .andExpect(status().`is`(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("status", `is`(ErrorStatusType.POLICY_VIOLATION.name)))
+                .andExpect(jsonPath("message", `is`(notNullValue())))
+                .andExpect(jsonPath("details", `is`(notNullValue())))
+    }
+
+    @Test @DisplayName("게시글 수정 통합테스트 - 게시글 작성자가 아닐경우")
+    fun testUpdatePost_게시글_작성자가_아닐경우() {
+        val writerAccount = createAccount()
+        val writerAccessToken = createAccessToken(writerAccount)
+        val postIdx = createPost(writerAccessToken).idx
+        val issuerAccount = createAccount()
+        val issuerAccessToken = createAccessToken(issuerAccount)
+
+        val updatedContent = TestUtil.data().post().content()
+
+        mvc.perform(put("/api/v1/post/${postIdx}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(UpdatePostRequest(updatedContent)))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer $issuerAccessToken"))
+                .andDo{ println(it.response.contentAsString) }
+                .andExpect(status().`is`(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("status", `is`(ErrorStatusType.POLICY_VIOLATION.name)))
+                .andExpect(jsonPath("message", `is`(notNullValue())))
+                .andExpect(jsonPath("details", `is`(notNullValue())))
     }
 
     @Test @DisplayName("게시글 작성 통합테스트 - 작성 성공")
@@ -89,8 +174,6 @@ class PostIntegrationTest: IntegrationTestBase() {
         val category = CategoryType.values().random()
         val board = BoardType.values().random()
         val request = CreatePostRequest(title, content, category, board)
-
-        dailyPostCountRepository.deleteAll()
 
         val resultAction = mvc.perform(post("/api/v1/post")
             .contentType(MediaType.APPLICATION_JSON)
@@ -115,7 +198,6 @@ class PostIntegrationTest: IntegrationTestBase() {
         val board = BoardType.values().random()
         val request = CreatePostRequest(title, content, category, board)
 
-        dailyPostCountRepository.deleteAll()
         DailyPostCount(account.idx, postProperties.dailyPostLimit, board).let { TestUtil.command().post().saveDailyCount(it) }
 
         val resultAction = mvc.perform(post("/api/v1/post")
