@@ -5,6 +5,8 @@ import gg.dak.board_api.domain.account.data.request.RegisterRequest
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.test_utils.TestComponentSource
 import gg.dak.board_api.test_utils.TestUtil
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -34,7 +36,7 @@ class AccountIntegrationTest: IntegrationTestBase() {
 
         accountRepository.deleteAll()
 
-        val resultAction = mvc.perform(post("/api/account/register")
+        val resultAction = mvc.perform(post("/api/v1/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
                 .accept(MediaType.APPLICATION_JSON))
@@ -42,6 +44,6 @@ class AccountIntegrationTest: IntegrationTestBase() {
 
         resultAction
                 .andExpect(status().isOk)
-                .andExpect(jsonPath("accountIdx").value(nickname))
+                .andExpect(jsonPath("accountIdx", `is`(notNullValue())))
     }
 }
