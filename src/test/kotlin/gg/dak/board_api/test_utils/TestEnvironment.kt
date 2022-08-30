@@ -8,6 +8,8 @@ import gg.dak.board_api.domain.post.data.type.CategoryType
 import gg.dak.board_api.global.account.data.dto.AccountDto
 
 object TestEnvironment {
+    fun createRefreshToken(account: AccountDto): String =
+            TestUtil.query().account().refreshToken(account.id, account.password)
     fun createAccessToken(account: AccountDto): String =
             TestUtil.query().account().accessToken(account.id, account.password)
 
