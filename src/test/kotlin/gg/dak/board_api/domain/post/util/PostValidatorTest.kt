@@ -80,7 +80,6 @@ class PostValidatorTest {
     /* PolicyValidator - 게시글 삭제 로직 검증 성공테스트
     PolicyValidator.validate(PostOperationType.DELETE, ?: PostDto)
     요청자가 작성자가 아니라면, 게시글을 삭제할 수 없다.
-    TODO: 랭킹에 등록되어있는 게시글은 삭제할 수 없다.
      */
     @Test @DisplayName("PolicyValidator - 게시글 삭제 로직 검증 성공테스트")
     fun testValidateDeletePost_positive() {
