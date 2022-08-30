@@ -21,4 +21,10 @@ object AccountQueryUtil {
                 ).andReturn().response.contentAsString
             }.let { TestComponentSource.objectMapper().readValue(it, LoginResponse::class.java) }
             .let { LoginTokenDto(it.accessToken, it.refreshToken) }
+
+    fun idx(accessToken: String): Long =
+        TestComponentSource.jwtTokenGenerator().decode(accessToken)
+                .let { it["id"]!! }
+                .let { TestComponentSource.accountRepository().findById(it) }
+                .get().idx
 }
