@@ -5,6 +5,7 @@ import gg.dak.board_api.domain.account.data.request.RegisterRequest
 import gg.dak.board_api.domain.post.config.PostProperties
 import gg.dak.board_api.domain.post.data.entity.DailyPostCount
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
+import gg.dak.board_api.domain.post.data.request.UpdatePostRequest
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.data.type.CategoryType
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -66,9 +68,34 @@ class PostIntegrationTest: IntegrationTestBase() {
             .andExpect(jsonPath("details", `is`(notNullValue())))
     }
 
+    @Test @DisplayName("게시글 수정 통합테스트 - 수정 성공")
+    fun testUpdatePost() {
+        val nickname = TestUtil.data().account().nickname()
+        val id = TestUtil.data().account().id()
+        val password = TestUtil.data().account().password()
+
+        TestUtil.command().account().create(RegisterRequest(nickname, id, password))
+        val accessToken = TestUtil.query().account().accessToken(id, password)
+
+        val title = TestUtil.data().post().title()
+        val content = TestUtil.data().post().content()
+        val updatedContent = TestUtil.data().post().content()
+        val category = CategoryType.values().random()
+        val board = BoardType.values().random()
+
+        val postIdx = TestUtil.command().post().create(CreatePostRequest(title, content, category, board), accessToken)
+
+        mvc.perform(put("/api/v1/post/$postIdx")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(UpdatePostRequest(updatedContent)))
+            .accept(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer $accessToken"))
+            .andDo{ println(it.response.contentAsString) }
+            .andExpect(status().`is`(HttpStatus.OK.value()))
+    }
+
     @Test @DisplayName("게시글 작성 통합테스트 - 작성 성공")
     fun testCreatePost() {
-        //given
         val nickname = TestUtil.data().account().nickname()
         val id = TestUtil.data().account().id()
         val password = TestUtil.data().account().password()
