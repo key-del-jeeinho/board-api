@@ -12,7 +12,7 @@ plugins {
 jacoco { toolVersion = "0.8.8" }
 
 group = "gg.dak"
-version = "1.0.0-RELEASE"
+version = "1.0.0-RELEASE2"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 configurations {
