@@ -20,6 +20,9 @@ object TestUtil {
         fun account() = AccountQueryUtil
     }
     object TestCommandUtil {
-        fun register(request: RegisterRequest)
+        fun account() = AccountCommandUtil
+
+        fun post() = PostCommandUtil
+
     }
 }

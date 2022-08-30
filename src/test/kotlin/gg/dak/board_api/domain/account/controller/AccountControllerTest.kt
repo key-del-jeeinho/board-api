@@ -50,7 +50,7 @@ class AccountControllerTest {
 
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
-        assertEquals(result.body!!.accountId, idx)
+        assertEquals(result.body!!.accountIdx, idx)
     }
 
     /* AccountController - 로그인 성공테스트
