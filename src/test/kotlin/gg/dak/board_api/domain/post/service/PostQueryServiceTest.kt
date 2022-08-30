@@ -1,6 +1,5 @@
 package gg.dak.board_api.domain.post.service
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.entity.Post
@@ -9,6 +8,7 @@ import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.repository.PostViewCountRepository
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.domain.post.util.PostQueryConverter
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -46,7 +46,7 @@ class PostQueryServiceTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val posts = (1..size).map { TestUtil.data().post().entity() }
         val data = PageImpl(posts)
         val dto = mock<PostDto>()
         val queryDto = mock<PostQueryDto>()
@@ -89,7 +89,7 @@ class PostQueryServiceTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val posts = (1..size).map { TestUtil.data().post().entity() }
         val data = PageImpl(posts)
         val dto = mock<PostDto>()
         val queryDto = mock<PostQueryDto>()
@@ -112,7 +112,7 @@ class PostQueryServiceTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val posts = (1..size).map { TestDummyDataUtil.post() }
+        val posts = (1..size).map { TestUtil.data().post().entity() }
         val data = PageImpl(posts)
         val dto = mock<PostDto>()
         val queryDto = mock<PostQueryDto>()

@@ -1,10 +1,10 @@
 package gg.dak.board_api.domain.account.service
 
-import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.util.AccountConverter
+import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.global.account.repository.AccountRepository
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -41,7 +41,7 @@ class AccountQueryServiceTest {
         val page = Random.nextInt().absoluteValue
         val size = (1..100).random()
         val pagination = PageRequest.of(page, size)
-        val accounts = (1..size).map { TestDummyDataUtil.account() }
+        val accounts = (1..size).map { TestUtil.data().account().entity() }
         val data = PageImpl(accounts)
         val dto = mock<AccountDto>()
 
@@ -82,7 +82,7 @@ class AccountQueryServiceTest {
     @Test @DisplayName("AccountQueryService - ID로 계정 조회 성공테스트")
     fun testFindAccountById_positive() {
         //given
-        val id = TestDummyDataUtil.id()
+        val id = TestUtil.data().account().id()
         val entity = mock<Account>()
         val optional = Optional.of(entity)
         val dto = mock<AccountDto>()

@@ -1,8 +1,6 @@
 package gg.dak.board_api.domain.account.controller
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
-import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RefreshLoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
@@ -10,6 +8,8 @@ import gg.dak.board_api.domain.account.data.response.LoginResponse
 import gg.dak.board_api.domain.account.service.AccountService
 import gg.dak.board_api.domain.account.service.RefreshLoginService
 import gg.dak.board_api.domain.account.util.AccountConverter
+import gg.dak.board_api.global.account.data.dto.AccountDto
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -50,7 +50,7 @@ class AccountControllerTest {
 
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
-        assertEquals(result.body!!.accountId, idx)
+        assertEquals(result.body!!.accountIdx, idx)
     }
 
     /* AccountController - 로그인 성공테스트
@@ -91,7 +91,7 @@ class AccountControllerTest {
     fun testRefreshLogin_positive() {
         //given
         val request = mock<RefreshLoginRequest>()
-        val refreshToken = TestDummyDataUtil.token()
+        val refreshToken = TestUtil.data().account().token()
         val loginTokenDto = mock<LoginTokenDto>()
         val response = mock<LoginResponse>()
 

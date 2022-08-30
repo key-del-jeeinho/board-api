@@ -1,10 +1,10 @@
 package gg.dak.board_api.domain.account.service
 
-import gg.dak.board_api.TestDummyDataUtil
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
 import gg.dak.board_api.global.account.util.UuidTokenGenerator
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -33,8 +33,8 @@ class RefreshLoginServiceTest {
     @Test @DisplayName("RefreshLoginService - 로그인 연장 성공테스트")
     fun testRefreshLogin_positive() {
         //given
-        val id = TestDummyDataUtil.id()
-        val refreshToken = TestDummyDataUtil.token()
+        val id = TestUtil.data().account().id()
+        val refreshToken = TestUtil.data().account().token()
         val loginTokenDto = mock<LoginTokenDto>()
 
         //when

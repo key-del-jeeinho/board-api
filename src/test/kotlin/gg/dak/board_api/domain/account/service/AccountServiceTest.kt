@@ -1,15 +1,15 @@
 package gg.dak.board_api.domain.account.service
 
-import gg.dak.board_api.TestDummyDataUtil
-import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.enitty.Account
 import gg.dak.board_api.domain.account.data.type.OperationType
-import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.domain.account.util.AccountPolicyValidator
 import gg.dak.board_api.domain.account.util.AccountProcessor
 import gg.dak.board_api.domain.account.util.LoginTokenGenerator
+import gg.dak.board_api.global.account.data.dto.AccountDto
+import gg.dak.board_api.global.account.repository.AccountRepository
+import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -80,10 +80,10 @@ class AccountServiceTest {
     fun testLogin_positive() {
         //given
         val dto = mock<AccountDto>()
-        val id = TestDummyDataUtil.id()
-        val password = TestDummyDataUtil.password()
-        val accessToken = TestDummyDataUtil.token()
-        val refreshToken = TestDummyDataUtil.token()
+        val id = TestUtil.data().account().id()
+        val password = TestUtil.data().account().password()
+        val accessToken = TestUtil.data().account().token()
+        val refreshToken = TestUtil.data().account().token()
         val loginTokenDto = LoginTokenDto(accessToken, refreshToken)
 
         //when
