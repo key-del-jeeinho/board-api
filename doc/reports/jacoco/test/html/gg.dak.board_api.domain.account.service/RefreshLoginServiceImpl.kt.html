@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RefreshLoginServiceImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.account.service</a> &gt; <span class="el_source">RefreshLoginServiceImpl.kt</span></div><h1>RefreshLoginServiceImpl.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.account.service
+
+import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
+import gg.dak.board_api.domain.account.data.type.TokenType
+import gg.dak.board_api.domain.account.util.LoginTokenUtil
+import gg.dak.board_api.global.account.util.UuidTokenGenerator
+import gg.dak.board_api.global.common.exception.PolicyValidationException
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.stereotype.Component
+
+<span class="fc" id="L11">@Component</span>
+<span class="fc" id="L12">class RefreshLoginServiceImpl(</span>
+<span class="fc" id="L13">    @Qualifier(&quot;volatility&quot;) private val uuidTokenGenerator: UuidTokenGenerator,</span>
+<span class="fc" id="L14">    private val loginTokenUtil: LoginTokenUtil</span>
+): RefreshLoginService {
+    override fun refreshLogin(refreshToken: String): LoginTokenDto =
+<span class="fc" id="L17">        uuidTokenGenerator.decode(refreshToken)</span>
+<span class="fc" id="L18">            .also { validatePayload(it) }</span>
+<span class="fc" id="L19">            .let { it[&quot;id&quot;]!! }</span>
+<span class="fc" id="L20">            .let { loginTokenUtil.generate(it) }</span>
+
+    private fun validatePayload(payload: Map&lt;String, String&gt;) {
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if(isFormatWrong(payload)) throw PolicyValidationException(&quot;로그인 연장 정책을 위반하였습니다!&quot;, &quot;토큰이 담고있는 정보가 바르지 않습니다!&quot;)</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if(isNotRefreshToken(payload)) throw PolicyValidationException(&quot;로그인 연장 정책을 위반하였습니다!&quot;, &quot;해당 토큰은 재발급토큰이 아닙니다!&quot;)</span>
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if(isExpired(payload)) throw PolicyValidationException(&quot;로그인 연장 정책을 위반하였습니다!&quot;, &quot;이미 만료된 재발급토큰입니다!&quot;)</span>
+<span class="fc" id="L26">    }</span>
+
+    //토큰의 페이로드 무결성 여부를 검사합니다.
+<span class="fc" id="L29">    private fun isFormatWrong(payload: Map&lt;String, String&gt;): Boolean = listOf(&quot;type&quot;, &quot;expiration&quot;, &quot;id&quot;).stream().noneMatch { key -&gt; payload.containsKey(key) }</span>
+    //토큰이 재발급토큰인지 검사합니다.
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">    private fun isNotRefreshToken(payload: Map&lt;String, String&gt;): Boolean = payload[&quot;type&quot;] != TokenType.LOGIN_REFRESH.key</span>
+    //토큰이 만료되었는지 검사합니다.
+<span class="fc" id="L33">    private fun isExpired(payload: Map&lt;String, String&gt;): Boolean = payload[&quot;expiration&quot;].toBoolean()</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

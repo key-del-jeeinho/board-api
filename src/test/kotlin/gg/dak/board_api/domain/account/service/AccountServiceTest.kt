@@ -6,7 +6,7 @@ import gg.dak.board_api.domain.account.data.type.OperationType
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.domain.account.util.AccountPolicyValidator
 import gg.dak.board_api.domain.account.util.AccountProcessor
-import gg.dak.board_api.domain.account.util.LoginTokenGenerator
+import gg.dak.board_api.domain.account.util.LoginTokenUtil
 import gg.dak.board_api.global.account.data.dto.AccountDto
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.test_utils.TestUtil
@@ -26,7 +26,7 @@ class AccountServiceTest {
     private lateinit var accountProcessor: AccountProcessor
     private lateinit var accountConverter: AccountConverter
     private lateinit var accountRepository: AccountRepository
-    private lateinit var loginTokenGenerator: LoginTokenGenerator
+    private lateinit var loginTokenUtil: LoginTokenUtil
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: AccountService
 
@@ -36,9 +36,9 @@ class AccountServiceTest {
         accountProcessor = mock()
         accountConverter = mock()
         accountRepository = mock()
-        loginTokenGenerator = mock()
+        loginTokenUtil = mock()
         applicationEventPublisher = mock()
-        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginTokenGenerator)
+        target = AccountServiceImpl(accountPolicyValidator, accountProcessor, accountConverter, accountRepository, loginTokenUtil)
     }
 
     @Test @DisplayName("AccountService - 회원가입 성공테스트")
@@ -89,7 +89,7 @@ class AccountServiceTest {
         //when
         whenever(dto.id).thenReturn(id)
         whenever(dto.password).thenReturn(password)
-        whenever(loginTokenGenerator.generate(id)).thenReturn(loginTokenDto)
+        whenever(loginTokenUtil.generate(id)).thenReturn(loginTokenDto)
 
         //then
         val result = target.login(dto)

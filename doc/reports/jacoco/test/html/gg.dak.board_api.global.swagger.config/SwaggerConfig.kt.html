@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SwaggerConfig.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.global.swagger.config</a> &gt; <span class="el_source">SwaggerConfig.kt</span></div><h1>SwaggerConfig.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.global.swagger.config
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import springfox.documentation.builders.ApiInfoBuilder
+import springfox.documentation.builders.PathSelectors
+import springfox.documentation.builders.RequestHandlerSelectors
+import springfox.documentation.service.ApiKey
+import springfox.documentation.service.AuthorizationScope
+import springfox.documentation.service.Contact
+import springfox.documentation.service.SecurityReference
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spi.service.contexts.SecurityContext
+import springfox.documentation.spring.web.plugins.Docket
+
+<span class="fc" id="L16">@Configuration</span>
+<span class="fc" id="L17">class SwaggerConfig {</span>
+    @Bean
+<span class="fc" id="L19">    fun docket(): Docket = Docket(DocumentationType.OAS_30)</span>
+<span class="fc" id="L20">            .select()</span>
+<span class="fc" id="L21">            .apis(RequestHandlerSelectors.basePackage(&quot;gg.dak.board_api&quot;))</span>
+<span class="fc" id="L22">            .paths(PathSelectors.any())</span>
+<span class="fc" id="L23">            .build()</span>
+<span class="fc" id="L24">            .apiInfo(apiInfo())</span>
+<span class="fc" id="L25">            .securityContexts(listOf(securityContext()))</span>
+<span class="fc" id="L26">            .securitySchemes(listOf(apiKey()))</span>
+
+    @Bean
+    fun securityContext(): SecurityContext =
+<span class="fc" id="L30">        SecurityContext.builder()</span>
+<span class="fc" id="L31">            .securityReferences(defaultAuth())</span>
+<span class="fc" id="L32">            .operationSelector { true }</span>
+<span class="fc" id="L33">            .build()</span>
+
+    private fun defaultAuth(): List&lt;SecurityReference&gt; =
+<span class="fc" id="L36">        arrayOf(AuthorizationScope(&quot;global&quot;, &quot;accessEverything&quot;))</span>
+<span class="fc" id="L37">            .let { listOf(SecurityReference(&quot;Authorization&quot;, it)) }</span>
+
+<span class="fc" id="L39">    private fun apiKey() = ApiKey(&quot;Authorization&quot;, &quot;Authorization&quot;, &quot;header&quot;)</span>
+
+<span class="fc" id="L41">    private fun apiInfo() = ApiInfoBuilder()</span>
+<span class="fc" id="L42">            .title(&quot;Board API&quot;)</span>
+<span class="fc" id="L43">            .description(&quot;소규모 게시글 서비스 API입니다. (Authorization 헤더 사용시 'Bearer 'prefix를 붙여주세요!)&quot;)</span>
+<span class="fc" id="L44">            .contact(Contact(&quot;Raul&quot;, &quot;https://www.github.com/key-del-jeeinho&quot;, &quot;recruit.raul@gmail.com&quot;))</span>
+<span class="fc" id="L45">            .version(&quot;1.0&quot;).build()</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,30 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: board_api
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  board-api:
+    environment:
+      REDIS_URL: redis
+      REDIS_PORT: 6379
+      MYSQL_URL: jdbc:mysql://mysql:3306/board_api
+      MYSQL_PASSWORD: root
+      MYSQL_USERNAME: root
+      SPRING_PROFILE: dev
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+      - redis

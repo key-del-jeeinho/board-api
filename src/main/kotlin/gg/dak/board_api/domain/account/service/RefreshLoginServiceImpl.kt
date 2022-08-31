@@ -2,7 +2,7 @@ package gg.dak.board_api.domain.account.service
 
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
-import gg.dak.board_api.domain.account.util.LoginTokenGenerator
+import gg.dak.board_api.domain.account.util.LoginTokenUtil
 import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import gg.dak.board_api.global.common.exception.PolicyValidationException
 import org.springframework.beans.factory.annotation.Qualifier
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component
 @Component
 class RefreshLoginServiceImpl(
     @Qualifier("volatility") private val uuidTokenGenerator: UuidTokenGenerator,
-    private val loginTokenGenerator: LoginTokenGenerator
+    private val loginTokenUtil: LoginTokenUtil
 ): RefreshLoginService {
     override fun refreshLogin(refreshToken: String): LoginTokenDto =
         uuidTokenGenerator.decode(refreshToken)
             .also { validatePayload(it) }
             .let { it["id"]!! }
-            .let { loginTokenGenerator.generate(it) }
+            .let { loginTokenUtil.generate(it) }
 
     private fun validatePayload(payload: Map<String, String>) {
         if(isFormatWrong(payload)) throw PolicyValidationException("로그인 연장 정책을 위반하였습니다!", "토큰이 담고있는 정보가 바르지 않습니다!")

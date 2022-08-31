@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostQueryServiceImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.post.service</a> &gt; <span class="el_source">PostQueryServiceImpl.kt</span></div><h1>PostQueryServiceImpl.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.post.service
+
+import gg.dak.board_api.domain.post.data.dto.PostQueryDto
+import gg.dak.board_api.domain.post.data.type.BoardType
+import gg.dak.board_api.domain.post.exception.UnknownPostException
+import gg.dak.board_api.domain.post.repository.PostRepository
+import gg.dak.board_api.domain.post.repository.PostViewCountRepository
+import gg.dak.board_api.domain.post.util.PostConverter
+import gg.dak.board_api.domain.post.util.PostQueryConverter
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L14">@Service</span>
+<span class="fc" id="L15">class PostQueryServiceImpl(</span>
+<span class="fc" id="L16">    private val postRepository: PostRepository,</span>
+<span class="fc" id="L17">    private val postConverter: PostConverter,</span>
+<span class="fc" id="L18">    private val postViewCountRepository: PostViewCountRepository,</span>
+<span class="fc" id="L19">    private val postQueryConverter: PostQueryConverter</span>
+): PostQueryService {
+    override fun findAllPost(pagination: PageRequest): Page&lt;PostQueryDto&gt; =
+<span class="fc" id="L22">        postRepository.findBy(pagination)</span>
+<span class="fc" id="L23">            .map { postConverter.toDto(it) }</span>
+<span class="fc" id="L24">            .map { postViewCountRepository.findById(it.idx) to it } //조회수 정보, 게시글</span>
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">            .map { (if(it.first.isEmpty) 0 else it.first.get().ips.size) to it.second} //조회수, 게시글</span>
+<span class="fc" id="L26">            .map { postQueryConverter.toQueryDto(it.first, it.second) }</span>
+
+    override fun findPostByIndex(idx: Long): PostQueryDto =
+<span class="fc" id="L29">        postRepository.findById(idx)</span>
+<span class="fc" id="L30">            .let {</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">                if (it.isEmpty) throw UnknownPostException(&quot;존재하지 않는 게시글의 인덱스입니다! - $idx&quot;)</span>
+<span class="fc" id="L32">                else it.get()</span>
+<span class="fc" id="L33">            }.let { postConverter.toDto(it) }</span>
+<span class="fc" id="L34">            .let { postViewCountRepository.findById(it.idx) to it } //조회수 정보, 게시글</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">            .let { (if(it.first.isEmpty) 0 else it.first.get().ips.size) to it.second} //조회수, 게시글</span>
+<span class="fc" id="L36">            .let { postQueryConverter.toQueryDto(it.first, it.second) }</span>
+
+    override fun findAllPostByBoard(pagination: PageRequest, boardId: BoardType): Page&lt;PostQueryDto&gt; =
+<span class="fc" id="L39">        postRepository.findAllByBoard(pagination, boardId)</span>
+<span class="fc" id="L40">            .map { postConverter.toDto(it) }</span>
+<span class="fc" id="L41">            .map { postViewCountRepository.findById(it.idx) to it } //조회수 정보, 게시글</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            .map { (if(it.first.isEmpty) 0 else it.first.get().ips.size) to it.second} //조회수, 게시글</span>
+<span class="fc" id="L43">            .map { postQueryConverter.toQueryDto(it.first, it.second) }</span>
+
+    override fun findAllPostByWriterIdx(pagination: PageRequest, writerIdx: Long): Page&lt;PostQueryDto&gt; =
+<span class="fc" id="L46">        postRepository.findAllByWriterIdx(pagination, writerIdx)</span>
+<span class="fc" id="L47">            .map { postConverter.toDto(it) }</span>
+<span class="fc" id="L48">            .map { postViewCountRepository.findById(it.idx) to it } //조회수 정보, 게시글</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">            .map { (if(it.first.isEmpty) 0 else it.first.get().ips.size) to it.second} //조회수, 게시글</span>
+<span class="fc" id="L50">            .map { postQueryConverter.toQueryDto(it.first, it.second) }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

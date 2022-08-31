@@ -6,7 +6,7 @@ import gg.dak.board_api.domain.account.data.request.LoginRequest
 import gg.dak.board_api.domain.account.data.request.RefreshLoginRequest
 import gg.dak.board_api.domain.account.data.request.RegisterRequest
 import gg.dak.board_api.domain.account.data.response.LoginResponse
-import gg.dak.board_api.domain.account.util.JwtTokenGenerator
+import gg.dak.board_api.domain.account.util.JwtTokenUtil
 import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.test_utils.TestComponentSource
 import gg.dak.board_api.test_utils.TestEnvironment.createAccount
@@ -29,13 +29,14 @@ class AccountIntegrationTest: IntegrationTestBase() {
     @Autowired
     private lateinit var accountRepository: AccountRepository
     @Autowired
-    private lateinit var jwtTokenGenerator: JwtTokenGenerator
+    private lateinit var jwtTokenUtil: JwtTokenUtil
 
     @BeforeEach
     fun setUp() {
         TestComponentSource.initializeMockMvc(mvc)
         TestComponentSource.initializeObjectMapper(objectMapper)
-        TestComponentSource.initializeJwtTokenGenerator(jwtTokenGenerator)
+        TestComponentSource.initializeJwtTokenGenerator(jwtTokenUtil)
+        TestComponentSource.initializeAccountRepository(accountRepository)
         accountRepository.deleteAll()
     }
 

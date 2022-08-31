@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostViewCountUpdateListener.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.post.listener</a> &gt; <span class="el_source">PostViewCountUpdateListener.kt</span></div><h1>PostViewCountUpdateListener.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.post.listener
+
+import gg.dak.board_api.domain.post.data.entity.PostViewCount
+import gg.dak.board_api.domain.post.data.event.PostDeleteEvent
+import gg.dak.board_api.domain.post.data.event.PostQueryEvent
+import gg.dak.board_api.domain.post.repository.PostViewCountRepository
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
+
+<span class="fc" id="L10">@Component</span>
+<span class="fc" id="L11">class PostViewCountUpdateListener(</span>
+<span class="fc" id="L12">    private val postViewCountRepository: PostViewCountRepository</span>
+) {
+    @EventListener(PostQueryEvent::class)
+    fun handle(e: PostQueryEvent) {
+<span class="fc" id="L16">        postViewCountRepository.existsById(e.idx)</span>
+<span class="fc" id="L17">            .let { isExists -&gt;</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">                if(isExists) postViewCountRepository.findById(e.idx).get()</span>
+<span class="fc" id="L19">                else PostViewCount(e.idx, emptySet())</span>
+<span class="fc" id="L20">            }.let { it.copy(ips = it.ips + e.ip) }</span>
+<span class="fc" id="L21">            .let { postViewCountRepository.save(it) }</span>
+<span class="fc" id="L22">    }</span>
+
+    @EventListener(PostDeleteEvent::class)
+    fun handle(e: PostDeleteEvent) =
+<span class="fc" id="L26">        postViewCountRepository.deleteById(e.idx)</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
