@@ -5,7 +5,7 @@
 
 ### Deploy to Docker-compose
 
-docker와 docker-compose가 설치된 환경에서 사용하실 수 있습니다.
+docker와 [docker-compose](https://github.com/key-del-jeeinho/board-api/blob/master/docker-compose.yml)가 설치된 환경에서 사용하실 수 있습니다.
 
 이 경우, 별도의 Database환경 없이도, docker-compose를 통해 API와 Database를 함께 실행할 수 있습니다.
 ```bash
