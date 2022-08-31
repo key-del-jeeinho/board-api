@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostQueryController.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.post.controller</a> &gt; <span class="el_source">PostQueryController.kt</span></div><h1>PostQueryController.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.post.controller
+
+import gg.dak.board_api.domain.post.data.response.PageablePostSummeryQueryResponse
+import gg.dak.board_api.domain.post.data.response.PostQueryResponse
+import gg.dak.board_api.domain.post.data.type.BoardType
+import gg.dak.board_api.domain.post.service.PostQueryService
+import gg.dak.board_api.domain.post.util.PostQueryConverter
+import gg.dak.board_api.global.ip.service.RequestIpQueryService
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.PageRequest
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+<span class="fc" id="L16">@Api(tags = [&quot;게시글 조회 API&quot;])</span>
+@RestController
+@RequestMapping(&quot;/api/v1/post/query&quot;)
+<span class="fc" id="L19">class PostQueryController(</span>
+<span class="fc" id="L20">    private val postQueryConverter: PostQueryConverter,</span>
+<span class="fc" id="L21">    private val postQueryService: PostQueryService,</span>
+<span class="fc" id="L22">    private val requestIpQueryService: RequestIpQueryService,</span>
+<span class="fc" id="L23">    private val applicationEventPublisher: ApplicationEventPublisher</span>
+) {
+    @ApiOperation(value = &quot;전체 게시글목록 조회(with Pagination)&quot;, notes = &quot;페이지네이션된 전체 게시글목록을 조회합니다.&quot;)
+    @GetMapping(&quot;/all&quot;)
+    fun findAllPostWithPagination(
+        @RequestParam(&quot;page&quot;) page: Int,
+        @RequestParam(&quot;size&quot;) size: Int): ResponseEntity&lt;PageablePostSummeryQueryResponse&gt; =
+<span class="fc" id="L30">        postQueryService.findAllPost(PageRequest.of(page, size))</span>
+<span class="fc" id="L31">            .map { postQueryConverter.toSummaryResponse(it) }</span>
+<span class="fc" id="L32">            .let { postQueryConverter.toPageableResponse(it.toList()) }</span>
+<span class="fc" id="L33">            .let { ResponseEntity.ok(it) }</span>
+
+    @ApiOperation(value = &quot;인덱스로 게시글 조회&quot;, notes = &quot;게시글의 인덱스로 게시글정보를 조회합니다.&quot;)
+    @GetMapping(&quot;/{idx}&quot;)
+    fun findPostByIndex(@PathVariable idx: Long): ResponseEntity&lt;PostQueryResponse&gt; =
+<span class="fc" id="L38">        postQueryService.findPostByIndex(idx)</span>
+<span class="fc" id="L39">            .also { dto -&gt;</span>
+<span class="fc" id="L40">                requestIpQueryService.getCurrentRequestIp()</span>
+<span class="fc" id="L41">                    .let { ip -&gt; postQueryConverter.toEvent(dto, ip) }</span>
+<span class="fc" id="L42">                    .let { event -&gt; applicationEventPublisher.publishEvent(event) }</span>
+<span class="fc" id="L43">            }.let { postQueryConverter.toResponse(it) }</span>
+<span class="fc" id="L44">            .let { ResponseEntity.ok(it) }</span>
+
+    @ApiOperation(value = &quot;게시판별 게시글목록 조회(with Pagination)&quot;, notes = &quot;페이지네이션된 게시판별 게시글목록을 조회합니다.&quot;)
+    @GetMapping(&quot;/board/{board}&quot;)
+    fun findAllPostByBoardWithPagination(
+        @PathVariable board: BoardType,
+        @RequestParam(&quot;page&quot;) page: Int,
+        @RequestParam(&quot;size&quot;) size: Int): ResponseEntity&lt;PageablePostSummeryQueryResponse&gt; =
+<span class="fc" id="L52">        postQueryService.findAllPostByBoard(PageRequest.of(page, size), board)</span>
+<span class="fc" id="L53">            .map { postQueryConverter.toSummaryResponse(it) }</span>
+<span class="fc" id="L54">            .let { postQueryConverter.toPageableResponse(it.toList()) }</span>
+<span class="fc" id="L55">            .let { ResponseEntity.ok(it) }</span>
+
+    @ApiOperation(value = &quot;작성자별 계정목록 조회(with Pagination)&quot;, notes = &quot;페이지네이션된 작성자별 게시글목록을 조회합니다.&quot;)
+    @GetMapping(&quot;/writer{writerIdx}&quot;)
+    fun findAllPostByWriterIdxWithPagination(
+        @PathVariable writerIdx: Long,
+        @RequestParam(&quot;page&quot;) page: Int,
+        @RequestParam(&quot;size&quot;) size: Int): ResponseEntity&lt;PageablePostSummeryQueryResponse&gt; =
+<span class="fc" id="L63">        postQueryService.findAllPostByWriterIdx(PageRequest.of(page, size), writerIdx)</span>
+<span class="fc" id="L64">            .map { postQueryConverter.toSummaryResponse(it) }</span>
+<span class="fc" id="L65">            .let { postQueryConverter.toPageableResponse(it.toList()) }</span>
+<span class="fc" id="L66">            .let { ResponseEntity.ok(it) }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

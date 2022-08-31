@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExceptionHandlerFilter.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.global.error.filter</a> &gt; <span class="el_source">ExceptionHandlerFilter.kt</span></div><h1>ExceptionHandlerFilter.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.global.error.filter
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import gg.dak.board_api.global.account.exception.JwtException
+import gg.dak.board_api.global.common.exception.PolicyValidationException
+import gg.dak.board_api.global.error.data.response.ErrorResponse
+import gg.dak.board_api.global.error.data.type.ErrorStatusType
+import gg.dak.board_api.global.error.exception.GlobalException
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
+import org.springframework.web.filter.OncePerRequestFilter
+import java.io.IOException
+import java.nio.charset.StandardCharsets
+import javax.servlet.FilterChain
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+
+@Component
+<span class="fc" id="L20">class ExceptionHandlerFilter: OncePerRequestFilter() {</span>
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
+    ) {
+<span class="pc" id="L26">        runCatching {</span>
+<span class="fc" id="L27">            filterChain.doFilter(request, response)</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        }.onFailure { throwable -&gt;</span>
+<span class="nc" id="L29">            when(throwable) {</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">                is PolicyValidationException -&gt; sendErrorResponse(HttpStatus.BAD_REQUEST, throwable, response, ErrorStatusType.POLICY_VIOLATION)</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">                is JwtException -&gt; sendErrorResponse(HttpStatus.UNAUTHORIZED, throwable, response, ErrorStatusType.JWT_ERROR)</span>
+
+<span class="nc" id="L33">                else -&gt; sendErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, object: GlobalException {</span>
+<span class="nc" id="L34">                    override fun getErrorMessage(): String = &quot;알 수 없는 오류가 발생했습니다!&quot;</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">                    override fun getErrorDetails(): String = throwable.message ?: throwable.localizedMessage</span>
+<span class="nc" id="L36">                }, response, ErrorStatusType.UNKNOWN_ERROR)</span>
+<span class="nc" id="L37">            } }</span>
+<span class="fc" id="L38">    }</span>
+
+    private fun sendErrorResponse(status: HttpStatus, exception: GlobalException, response: HttpServletResponse, errorStatusType: ErrorStatusType) {
+<span class="nc" id="L41">        response.characterEncoding = StandardCharsets.UTF_8.name()</span>
+<span class="nc" id="L42">        response.status = status.value()</span>
+<span class="nc" id="L43">        response.contentType = &quot;application/json&quot;</span>
+<span class="nc" id="L44">        try {</span>
+<span class="nc" id="L45">            ErrorResponse(</span>
+<span class="nc" id="L46">                errorStatusType,</span>
+<span class="nc" id="L47">                exception.getErrorMessage(),</span>
+<span class="nc" id="L48">                exception.getErrorDetails()</span>
+<span class="nc" id="L49">            ).let { writeErrorResponse(it) }</span>
+<span class="nc" id="L50">            .let { response.writer.write(it) }</span>
+<span class="nc" id="L51">        } catch (e: IOException) {</span>
+<span class="nc" id="L52">            e.printStackTrace()</span>
+        }
+<span class="nc" id="L54">    }</span>
+
+    private fun writeErrorResponse(errorResponse: ErrorResponse): String =
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        runCatching { ObjectMapper().writeValueAsString(errorResponse) }</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            .getOrNull() ?: &quot;예상치 못한 오류가 발생하였습니다!&quot;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

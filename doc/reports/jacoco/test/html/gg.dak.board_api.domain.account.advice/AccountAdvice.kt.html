@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountAdvice.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.account.advice</a> &gt; <span class="el_source">AccountAdvice.kt</span></div><h1>AccountAdvice.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.account.advice
+
+import gg.dak.board_api.domain.account.controller.AccountController
+import gg.dak.board_api.domain.account.exception.UnknownUuidTokenException
+import gg.dak.board_api.global.account.exception.UnknownAccountException
+import gg.dak.board_api.global.error.data.response.ErrorResponse
+import gg.dak.board_api.global.error.data.type.ErrorStatusType
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
+
+<span class="fc" id="L12">@RestControllerAdvice(basePackageClasses = [AccountController::class])</span>
+<span class="fc" id="L13">class AccountAdvice {</span>
+    @ExceptionHandler(UnknownUuidTokenException::class)
+    fun handle(e: UnknownUuidTokenException) =
+<span class="nc" id="L16">        ErrorResponse(</span>
+<span class="nc" id="L17">            status = ErrorStatusType.UNKNOWN_TOKEN,</span>
+<span class="nc" id="L18">            message = e.getErrorMessage(),</span>
+<span class="nc" id="L19">            details = e.getErrorDetails()</span>
+<span class="nc" id="L20">        ).let { ResponseEntity.badRequest().body(it) }</span>
+
+    @ExceptionHandler(UnknownAccountException::class)
+    fun handle(e: UnknownAccountException) =
+<span class="nc" id="L24">        ErrorResponse(</span>
+<span class="nc" id="L25">            status = ErrorStatusType.UNKNOWN_ACCOUNT,</span>
+<span class="nc" id="L26">            message = e.getErrorMessage(),</span>
+<span class="nc" id="L27">            details = e.getErrorDetails()</span>
+<span class="nc" id="L28">        ).let { ResponseEntity.badRequest().body(it) }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

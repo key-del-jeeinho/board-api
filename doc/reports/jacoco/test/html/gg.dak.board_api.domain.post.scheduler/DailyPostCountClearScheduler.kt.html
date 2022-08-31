@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DailyPostCountClearScheduler.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.post.scheduler</a> &gt; <span class="el_source">DailyPostCountClearScheduler.kt</span></div><h1>DailyPostCountClearScheduler.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.post.scheduler
+
+import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
+
+<span class="fc" id="L7">@Component</span>
+<span class="fc" id="L8">class DailyPostCountClearScheduler(</span>
+<span class="fc" id="L9">    private val dailyPostCountRepository: DailyPostCountRepository</span>
+) {
+    /* Trade-off
+    서비스 증대시, Scheduler로 Count가 초기화되기 이전에 게시글 작성 요청이 들어올 수 있다.
+    이로 인한 오류를 방지하려면, DailyPostCount에 날짜정보를 포함시키고, Validation에서 당일에 대한 Count를 가져오는방식으로 변경해야한다.
+    삭제 또한 전체삭제가아닌, 날짜기반 그룹 삭제 방식으로 변경해야한다.
+     */
+    @Scheduled(cron = &quot;0 0 0 * * *&quot;)
+    fun clearDailyPostCount() {
+<span class="fc" id="L18">        dailyPostCountRepository.deleteAll()</span>
+<span class="fc" id="L19">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

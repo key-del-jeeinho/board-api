@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostValidatorImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">board-api</a> &gt; <a href="index.source.html" class="el_package">gg.dak.board_api.domain.post.util</a> &gt; <span class="el_source">PostValidatorImpl.kt</span></div><h1>PostValidatorImpl.kt</h1><pre class="source lang-java linenums">package gg.dak.board_api.domain.post.util
+
+import gg.dak.board_api.domain.post.config.PostProperties
+import gg.dak.board_api.domain.post.data.dto.PostDto
+import gg.dak.board_api.domain.post.data.type.PostOperationType
+import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
+import gg.dak.board_api.domain.post.repository.PostRepository
+import gg.dak.board_api.global.common.exception.PolicyValidationException
+import gg.dak.board_api.global.security.service.LoginAccountService
+import org.springframework.stereotype.Component
+
+<span class="fc" id="L12">@Component</span>
+<span class="fc" id="L13">class PostValidatorImpl(</span>
+<span class="fc" id="L14">    private val postProperties: PostProperties,</span>
+<span class="fc" id="L15">    private val postRepository: PostRepository,</span>
+<span class="fc" id="L16">    private val dailyPostCountRepository: DailyPostCountRepository,</span>
+<span class="fc" id="L17">    private val loginAccountService: LoginAccountService</span>
+): PostValidator {
+    override fun validate(type: PostOperationType, dto: PostDto) =
+<span class="fc bfc" id="L20" title="All 3 branches covered.">        when(type) {</span>
+<span class="fc" id="L21">            PostOperationType.CREATE -&gt; validateDailyPostLimit(dto)</span>
+<span class="fc" id="L22">            PostOperationType.DELETE -&gt; validateIsOwner(dto, &quot;포스트 삭제 정책을 위반하였습니다!&quot;, &quot;포스트 작성자만 포스트를 삭제할 수 있습니다!&quot;)</span>
+<span class="fc" id="L23">            PostOperationType.UPDATE -&gt; validateIsOwner(dto, &quot;포스트 수정 정책을 위반하였습니다!&quot;, &quot;포스트 작성자만 포스트를 수정할 수 있습니다!&quot;)</span>
+<span class="fc" id="L24">        }</span>
+
+    private fun validateIsOwner(dto: PostDto, errorMessage: String, errorDetail: String) =
+<span class="fc" id="L27">        postRepository.findById(dto.idx)</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">            .let { if(it.isEmpty) throw PolicyValidationException(errorMessage, &quot;존재하지 않는 게시글입니다.&quot;) else it.get() }</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">            .let { it.writerIdx == loginAccountService.getLoginAccount().idx}</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            .let { isOwner -&gt; if(!isOwner) throw PolicyValidationException(errorMessage, errorDetail) }</span>
+
+    private fun validateDailyPostLimit(dto: PostDto) =
+<span class="fc" id="L33">        dailyPostCountRepository.findByAccountIdxAndBoard(dto.writerIdx, dto.board)</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">            .let { if(it.isEmpty) return else it.get()} //만약, 일일작성횟수 정보가 없다면, 검증중인 게시글을 오늘 첫 작성 게시글로 취급한다.</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">            .let { if(it.count &gt;= postProperties.dailyPostLimit) throw PolicyValidationException(&quot;포스트 작성 정책을 위반하였습니다!&quot;, &quot;일일 작성한도를 초과하였습니다.&quot;) }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
