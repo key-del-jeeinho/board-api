@@ -1,7 +1,7 @@
 package gg.dak.board_api.test_utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import gg.dak.board_api.domain.account.util.JwtTokenGenerator
+import gg.dak.board_api.domain.account.util.JwtTokenUtil
 import gg.dak.board_api.domain.post.repository.DailyPostCountRepository
 import gg.dak.board_api.global.account.repository.AccountRepository
 import org.springframework.test.web.servlet.MockMvc
@@ -11,7 +11,7 @@ object TestComponentSource {
     private var objectMapper: ObjectMapper? = null
     private var dailyPostCountRepository: DailyPostCountRepository? = null
     private var accountRepository: AccountRepository? = null
-    private var jwtTokenGenerator: JwtTokenGenerator? = null
+    private var jwtTokenUtil: JwtTokenUtil? = null
 
     fun initializeMockMvc(mockMvc: MockMvc) {
         if(this.mockMvc == null) this.mockMvc = mockMvc
@@ -33,8 +33,8 @@ object TestComponentSource {
     }
     fun accountRepository(): AccountRepository = accountRepository!!
 
-    fun initializeJwtTokenGenerator(jwtTokenGenerator: JwtTokenGenerator) {
-        if(this.jwtTokenGenerator == null) this.jwtTokenGenerator = jwtTokenGenerator
+    fun initializeJwtTokenGenerator(jwtTokenUtil: JwtTokenUtil) {
+        if(this.jwtTokenUtil == null) this.jwtTokenUtil = jwtTokenUtil
     }
-    fun jwtTokenGenerator(): JwtTokenGenerator = jwtTokenGenerator!!
+    fun jwtTokenGenerator(): JwtTokenUtil = jwtTokenUtil!!
 }

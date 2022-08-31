@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.account.util.impl
 
 import gg.dak.board_api.domain.account.config.JwtProperties
-import gg.dak.board_api.domain.account.util.JwtTokenGenerator
+import gg.dak.board_api.domain.account.util.JwtTokenUtil
 import gg.dak.board_api.global.account.exception.JwtException
 import gg.dak.board_api.global.common.util.DateUtil
 import io.jsonwebtoken.Header
@@ -12,10 +12,10 @@ import java.sql.Timestamp
 import java.util.stream.Collectors
 
 @Component
-class JwtTokenGeneratorImpl(
+class JwtTokenUtilImpl(
     private val dateUtil: DateUtil,
     private val jwtProperties: JwtProperties
-) : JwtTokenGenerator {
+) : JwtTokenUtil {
     override fun generate(payload: Map<String, String>, expireSecond: Long): String =
         try {
             dateUtil.dateTimeNow().let {

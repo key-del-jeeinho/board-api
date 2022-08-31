@@ -2,7 +2,7 @@ package gg.dak.board_api.domain.account.service
 
 import gg.dak.board_api.domain.account.data.dto.LoginTokenDto
 import gg.dak.board_api.domain.account.data.type.TokenType
-import gg.dak.board_api.domain.account.util.LoginTokenGenerator
+import gg.dak.board_api.domain.account.util.LoginTokenUtil
 import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,14 +14,14 @@ import org.mockito.kotlin.whenever
 
 class RefreshLoginServiceTest {
     private lateinit var uuidTokenGenerator: UuidTokenGenerator
-    private lateinit var loginTokenGenerator: LoginTokenGenerator
+    private lateinit var loginTokenUtil: LoginTokenUtil
     private lateinit var target: RefreshLoginService
 
     @BeforeEach
     fun setUp() {
         uuidTokenGenerator = mock()
-        loginTokenGenerator = mock()
-        target = RefreshLoginServiceImpl(uuidTokenGenerator, loginTokenGenerator)
+        loginTokenUtil = mock()
+        target = RefreshLoginServiceImpl(uuidTokenGenerator, loginTokenUtil)
     }
 
     /* RefreshLoginService - 로그인 연장 성공테스트
@@ -43,7 +43,7 @@ class RefreshLoginServiceTest {
             "type" to TokenType.LOGIN_REFRESH.key,
             "expiration" to false.toString()
         ))
-        whenever(loginTokenGenerator.generate(id)).thenReturn(loginTokenDto)
+        whenever(loginTokenUtil.generate(id)).thenReturn(loginTokenDto)
 
         //then
         val result = target.refreshLogin(refreshToken)

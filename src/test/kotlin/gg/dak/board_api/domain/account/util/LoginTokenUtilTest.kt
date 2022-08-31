@@ -6,7 +6,7 @@ import gg.dak.board_api.domain.account.data.event.LoginTokenCreateEvent
 import gg.dak.board_api.domain.account.data.type.TokenType
 import gg.dak.board_api.domain.account.repository.RefreshTokenRepository
 import gg.dak.board_api.domain.account.repository.UuidTokenRepository
-import gg.dak.board_api.domain.account.util.impl.LoginTokenGeneratorImpl
+import gg.dak.board_api.domain.account.util.impl.LoginTokenUtilImpl
 import gg.dak.board_api.global.account.util.UuidTokenGenerator
 import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,24 +18,24 @@ import org.springframework.context.ApplicationEventPublisher
 import java.util.*
 import kotlin.random.Random
 
-class LoginTokenGeneratorTest {
+class LoginTokenUtilTest {
     private lateinit var loginProperties: LoginProperties
-    private lateinit var jwtTokenGenerator: JwtTokenGenerator
+    private lateinit var jwtTokenUtil: JwtTokenUtil
     private lateinit var uuidTokenGenerator: UuidTokenGenerator
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
-    private lateinit var target: LoginTokenGenerator
+    private lateinit var target: LoginTokenUtil
     private lateinit var uuidTokenRepository: UuidTokenRepository
     private lateinit var refreshTokenRepository: RefreshTokenRepository
 
     @BeforeEach
     fun setUp() {
         loginProperties = mock()
-        jwtTokenGenerator = mock()
+        jwtTokenUtil = mock()
         uuidTokenGenerator = mock()
         applicationEventPublisher = mock()
         uuidTokenRepository = mock()
         refreshTokenRepository = mock()
-        target = LoginTokenGeneratorImpl(loginProperties, jwtTokenGenerator, uuidTokenGenerator, applicationEventPublisher, uuidTokenRepository, refreshTokenRepository)
+        target = LoginTokenUtilImpl(loginProperties, jwtTokenUtil, uuidTokenGenerator, applicationEventPublisher, uuidTokenRepository, refreshTokenRepository)
     }
 
     /* LoginTokenGenerator - 로그인 토큰 발급 성공테스트
@@ -61,7 +61,7 @@ class LoginTokenGeneratorTest {
         whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
         whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
         whenever(refreshTokenRepository.findById(id)).thenReturn(optional)
-        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
+        whenever(jwtTokenUtil.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
         whenever(uuidTokenGenerator.generate(mapOf(
             "id" to id,
             "type" to TokenType.LOGIN_REFRESH.key,
@@ -95,7 +95,7 @@ class LoginTokenGeneratorTest {
         whenever(loginProperties.accessTokenProperties.expireSecond).thenReturn(accessTokenExpireSecond)
         whenever(loginProperties.refreshTokenProperties.expireSecond).thenReturn(refreshTokenExpireSecond)
         whenever(refreshTokenRepository.findById(id)).thenReturn(optional)
-        whenever(jwtTokenGenerator.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
+        whenever(jwtTokenUtil.generate(mapOf("id" to id,"type" to TokenType.LOGIN_ACCESS.key), accessTokenExpireSecond)).thenReturn(accessToken)
         whenever(uuidTokenGenerator.generate(mapOf(
             "id" to id,
             "type" to TokenType.LOGIN_REFRESH.key,

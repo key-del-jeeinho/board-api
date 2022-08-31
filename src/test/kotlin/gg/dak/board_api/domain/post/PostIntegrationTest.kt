@@ -1,7 +1,7 @@
 package gg.dak.board_api.domain.post
 
 import gg.dak.board_api.IntegrationTestBase
-import gg.dak.board_api.domain.account.util.JwtTokenGenerator
+import gg.dak.board_api.domain.account.util.JwtTokenUtil
 import gg.dak.board_api.domain.post.config.PostProperties
 import gg.dak.board_api.domain.post.data.entity.DailyPostCount
 import gg.dak.board_api.domain.post.data.request.CreatePostRequest
@@ -39,7 +39,7 @@ class PostIntegrationTest: IntegrationTestBase() {
     @Autowired
     private lateinit var accountRepository: AccountRepository
     @Autowired
-    private lateinit var jwtTokenGenerator: JwtTokenGenerator
+    private lateinit var jwtTokenUtil: JwtTokenUtil
     @Autowired
     private lateinit var postRepository: PostRepository
 
@@ -49,7 +49,7 @@ class PostIntegrationTest: IntegrationTestBase() {
         TestComponentSource.initializeObjectMapper(objectMapper)
         TestComponentSource.initializeDailyPostCountRepository(dailyPostCountRepository)
         TestComponentSource.initializeAccountRepository(accountRepository)
-        TestComponentSource.initializeJwtTokenGenerator(jwtTokenGenerator)
+        TestComponentSource.initializeJwtTokenGenerator(jwtTokenUtil)
 
         dailyPostCountRepository.deleteAll()
         accountRepository.deleteAll()

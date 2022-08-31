@@ -1,7 +1,7 @@
 package gg.dak.board_api.global.security.filter
 
 import gg.dak.board_api.domain.account.data.type.TokenType
-import gg.dak.board_api.domain.account.util.JwtTokenGenerator
+import gg.dak.board_api.domain.account.util.JwtTokenUtil
 import gg.dak.board_api.global.common.exception.PolicyValidationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class JwtAuthenticateFilter(
     private val userDetailsService: UserDetailsService,
-    private val jwtTokenGenerator: JwtTokenGenerator
+    private val jwtTokenUtil: JwtTokenUtil
 ): OncePerRequestFilter() {
     companion object { private const val TOKEN_PREFIX = "Bearer " }
 
@@ -49,7 +49,7 @@ class JwtAuthenticateFilter(
             }
 
     private fun getId(token: String): String =
-        jwtTokenGenerator.decode(token)
+        jwtTokenUtil.decode(token)
             .also { validatePayload(it) }
             .let { it["id"]!! }
 

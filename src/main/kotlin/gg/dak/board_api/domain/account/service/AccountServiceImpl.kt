@@ -7,16 +7,16 @@ import gg.dak.board_api.global.account.repository.AccountRepository
 import gg.dak.board_api.domain.account.util.AccountConverter
 import gg.dak.board_api.domain.account.util.AccountPolicyValidator
 import gg.dak.board_api.domain.account.util.AccountProcessor
-import gg.dak.board_api.domain.account.util.LoginTokenGenerator
+import gg.dak.board_api.domain.account.util.LoginTokenUtil
 import org.springframework.stereotype.Service
 
 @Service
 class AccountServiceImpl(
-    private val accountPolicyValidator: AccountPolicyValidator,
-    private val accountProcessor: AccountProcessor,
-    private val accountConverter: AccountConverter,
-    private val accountRepository: AccountRepository,
-    private val loginTokenGenerator: LoginTokenGenerator,
+        private val accountPolicyValidator: AccountPolicyValidator,
+        private val accountProcessor: AccountProcessor,
+        private val accountConverter: AccountConverter,
+        private val accountRepository: AccountRepository,
+        private val loginTokenUtil: LoginTokenUtil,
 ): AccountService {
     override fun register(dto: AccountDto): AccountDto =
         accountPolicyValidator.validate(OperationType.REGISTER, dto) //회원가입 정책을 검사합니다.
@@ -27,5 +27,5 @@ class AccountServiceImpl(
 
     override fun login(dto: AccountDto): LoginTokenDto =
         accountPolicyValidator.validate(OperationType.LOGIN, dto) //로그인 정책을 검사합니다.
-            .let { loginTokenGenerator.generate(dto.id) }//로그인 토큰을 발급합니다.
+            .let { loginTokenUtil.generate(dto.id) }//로그인 토큰을 발급합니다.
 }
