@@ -8,14 +8,12 @@ import gg.dak.board_api.domain.post.data.response.PostSummeryQueryResponse
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.service.PostQueryService
 import gg.dak.board_api.domain.post.util.PostQueryConverter
-import gg.dak.board_api.global.ip.service.RequestIpQueryService
 import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import kotlin.math.absoluteValue
@@ -24,17 +22,13 @@ import kotlin.random.Random
 class PostQueryControllerTest {
     private lateinit var postQueryConverter: PostQueryConverter
     private lateinit var postQueryService: PostQueryService
-    private lateinit var requestIpQueryService: RequestIpQueryService
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: PostQueryController
 
     @BeforeEach
     fun setUp() {
         postQueryConverter = mock()
         postQueryService = mock()
-        requestIpQueryService = mock()
-        applicationEventPublisher = mock()
-        target = PostQueryController(postQueryConverter, postQueryService, requestIpQueryService, applicationEventPublisher)
+        target = PostQueryController(postQueryConverter, postQueryService)
     }
 
     @Test @DisplayName("PostQueryController - 전체 게시글목록 조회 성공테스트")
@@ -72,7 +66,6 @@ class PostQueryControllerTest {
         //when
         whenever(postQueryService.findPostByIndex(idx)).thenReturn(dto)
         whenever(postQueryConverter.toResponse(dto)).thenReturn(response)
-        whenever(requestIpQueryService.getCurrentRequestIp()).thenReturn(ip)
         whenever(postQueryConverter.toEvent(dto, ip)).thenReturn(event)
 
         //then
@@ -80,7 +73,6 @@ class PostQueryControllerTest {
         assertTrue(result.statusCode.is2xxSuccessful)
         assertNotNull(result.body)
         assertEquals(result.body, response)
-        verify(applicationEventPublisher, times(1)).publishEvent(event)
     }
 
     @Test @DisplayName("PostQueryController - 게시판별 게시글목록 조회 성공테스트")

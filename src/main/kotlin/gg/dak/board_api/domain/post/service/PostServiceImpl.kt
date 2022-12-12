@@ -20,31 +20,25 @@ class PostServiceImpl(
     override fun createPost(dto: PostDto): PostDto =
         postValidator.validate(PostOperationType.CREATE, dto)
             .let { postProcessor.process(PostOperationType.CREATE, dto) }
-            .let { postConverter.toEntity(it) }
-            .let { postRepository.save(it) }
-            .let { postConverter.toDto(it) }
-            .also {
-                postConverter.toCreateEvent(it)
-                .let { event -> applicationEventPublisher.publishEvent(event) }
-            }
+            .let(postConverter::toEntity)
+            .let(postRepository::save)
+            .let(postConverter::toDto)
+            .also { postConverter.toCreateEvent(it).publishEvent() }
 
     override fun deletePost(dto: PostDto): PostDto =
         postValidator.validate(PostOperationType.DELETE, dto)
             .let { postProcessor.process(PostOperationType.DELETE, dto) }
             .also { postRepository.deleteById(dto.idx) }
-            .also {
-                postConverter.toDeleteEvent(it.idx)
-                .let { event -> applicationEventPublisher.publishEvent(event) }
-            }.let { dto }
+            .also { postConverter.toDeleteEvent(it.idx).publishEvent() }
+            .let { dto }
 
     override fun updatePost(dto: PostDto): PostDto =
         postValidator.validate(PostOperationType.UPDATE, dto)
             .let { postProcessor.process(PostOperationType.UPDATE, dto) }
-            .let { postConverter.toEntity(it) }
-            .let { postRepository.save(it) }
-            .let { postConverter.toDto(it) }
-            .also {
-                postConverter.toUpdateEvent(it)
-                .let { event -> applicationEventPublisher.publishEvent(event) }
-            }
+            .let(postConverter::toEntity)
+            .let(postRepository::save)
+            .let(postConverter::toDto)
+            .also { postConverter.toUpdateEvent(it).publishEvent() }
+
+    fun <T: Any> T.publishEvent() = applicationEventPublisher.publishEvent(this)
 }

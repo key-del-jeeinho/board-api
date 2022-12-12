@@ -3,21 +3,21 @@ package gg.dak.board_api.domain.post.service
 import gg.dak.board_api.domain.post.data.dto.PostDto
 import gg.dak.board_api.domain.post.data.dto.PostQueryDto
 import gg.dak.board_api.domain.post.data.entity.Post
+import gg.dak.board_api.domain.post.data.event.PostQueryEvent
 import gg.dak.board_api.domain.post.data.type.BoardType
 import gg.dak.board_api.domain.post.repository.PostRepository
 import gg.dak.board_api.domain.post.repository.PostViewCountRepository
 import gg.dak.board_api.domain.post.util.PostConverter
 import gg.dak.board_api.domain.post.util.PostQueryConverter
+import gg.dak.board_api.global.ip.service.RequestIpQueryService
 import gg.dak.board_api.test_utils.TestUtil
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.util.*
@@ -29,6 +29,8 @@ class PostQueryServiceTest {
     private lateinit var postConverter: PostConverter
     private lateinit var postViewCountRepository: PostViewCountRepository
     private lateinit var postQueryConverter: PostQueryConverter
+    private lateinit var requestIpQueryService: RequestIpQueryService
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private lateinit var target: PostQueryService
 
     @BeforeEach
@@ -37,7 +39,9 @@ class PostQueryServiceTest {
         postConverter = mock()
         postViewCountRepository = mock()
         postQueryConverter = mock()
-        target = PostQueryServiceImpl(postRepository, postConverter, postViewCountRepository, postQueryConverter)
+        requestIpQueryService = mock()
+        applicationEventPublisher = mock()
+        target = PostQueryServiceImpl(postRepository, postConverter, postViewCountRepository, postQueryConverter, requestIpQueryService, applicationEventPublisher)
     }
 
     @Test @DisplayName("PostQueryService - 전체 게시글목록 조회 성공테스트")
@@ -70,6 +74,8 @@ class PostQueryServiceTest {
         val optional = Optional.of(entity)
         val dto = mock<PostDto>()
         val queryDto = mock<PostQueryDto>()
+        val event = mock<PostQueryEvent>()
+        val ip = TestUtil.data().post().ip()
 
         //when
         whenever(postRepository.findById(idx)).thenReturn(optional)
@@ -77,8 +83,13 @@ class PostQueryServiceTest {
         whenever(postViewCountRepository.findById(any())).thenReturn(Optional.empty())
         whenever(postQueryConverter.toQueryDto(any(), eq(dto))).thenReturn(queryDto)
 
+        whenever(requestIpQueryService.getCurrentRequestIp()).thenReturn(ip)
+        whenever(postQueryConverter.toEvent(queryDto, ip)).thenReturn(event)
+
         //then
         val result = target.findPostByIndex(idx)
+        verify(requestIpQueryService, times(1)).getCurrentRequestIp()
+        verify(applicationEventPublisher, times(1)).publishEvent(event)
         assertEquals(result, queryDto)
     }
 
